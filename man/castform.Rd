@@ -15,6 +15,7 @@ Downloads hourly weather station data (as csv files) from Environment Canada.
   \item \code{\link{get_multiple_station_files}}: Downloads multiple hourly data files.
   \item \code{\link{province_station_files}}: Downloads data files by province.
   \item \code{\link{year_range_station_files}}: Downloads data files by year range.
+  \item \code{\link{get_all_files}}: Downloads all data files with hourly data available.
 }
 }
 
