@@ -1,0 +1,22 @@
+Package: castform
+Type: Package
+Title: Download Environment Canada Weather Station Data
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Shawn", "Yip",
+      email = "shawniceyip@trentu.ca",
+      role = c("aut", "cre")
+    )
+  )
+Description: Downloads hourly weather station data (as csv files) from
+    Environment Canada. 
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
+Imports: 
+    ggplot2,
+    future,
+    furrr,
+    purrr
