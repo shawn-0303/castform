@@ -7,5 +7,5 @@
 get_all_files()
 }
 \description{
-Downloads all Rnvironment Canada data from all stations with hourly data available.
+Downloads all Environment Canada data from all stations with hourly data available.
 }

@@ -1,15 +1,13 @@
 #' Get All Files
 #'
-#' Downloads all Rnvironment Canada data from all stations with hourly data available.
+#' Downloads all Environment Canada data from all stations with hourly data available.
 #'
 #' @export
 get_all_files <- function( ) {
-  input_file <- "HLY_station_info.csv"
-  HLY_stations <- read.csv(system.file("data", "HLY_station_info.csv", package = "castform"))
   download_dir <- "all_station_data"
 
-  for (i in seq_len(nrow(HLY_stations))) {
-    row = HLY_stations[i,]
+  for (i in seq_len(nrow(HLY_station_info))) {
+    row = HLY_station_info[i,]
     station_id = row$Station.ID
     station_name = gsub(" ", "_", row$stationName)
     province = gsub(" ", "_", row$Province)

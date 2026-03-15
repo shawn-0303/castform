@@ -16,15 +16,13 @@
 #' @export
 get_multiple_station_files <- function(station_name = NULL, station_id = NULL, number_of_files = NULL, year = NULL, month = NULL, parallel_threshold = 50) {
 
-  HLY_stations <- read.csv(system.file("data", "HLY_station_info.csv", package = "castform"))
-
   # No station name or id provided
   if (is.null(station_name) && any(is.null(station_id)))
     stop("Provide station_name or station_id.")
 
   # No station name provided
   if (is.null(station_name) || any(is.na(station_name))) {
-    station_matches <- HLY_stations[HLY_stations$Station.ID == station_id, ]
+    station_matches <- HLY_station_info[HLY_station_info$Station.ID == station_id, ]
     if (nrow(station_matches) == 0) {
       message("Station ID ", station_id, " not found."); return(NULL)
     }
@@ -32,7 +30,7 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
 
   } else {
     station_name <- toupper(gsub('"', '', station_name))
-    station_matches <- HLY_stations[toupper(HLY_stations$stationName) == station_name, ]
+    station_matches <- HLY_station_info[toupper(HLY_station_info$stationName) == station_name, ]
 
     # No station id provided
     if (nrow(station_matches) == 0) {

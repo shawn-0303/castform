@@ -17,8 +17,7 @@ province_station_files <- function(province, year = NULL, month = NULL, parallel
   province = toupper(gsub('"', '', province))
   download_months = if(is.null(month)) 1:12 else month
 
-  HLY_stations <- read.csv(system.file("data", "HLY_station_info.csv", package = "castform"))
-  province_subset <- HLY_stations[HLY_stations$Province == province, ]
+  province_subset <- HLY_station_info[HLY_station_info$Province == province, ]
 
   # Province misspelling
   if (nrow(province_subset) == 0) {
@@ -53,9 +52,9 @@ province_station_files <- function(province, year = NULL, month = NULL, parallel
     month <- match(month_clean, tolower(month.abb))
   }
 
-  province_matches <- HLY_stations[HLY_stations$Province == province &
-                                     HLY_stations$HLY.First.Year <= year &
-                                     HLY_stations$HLY.Last.Year >= year, ]
+  province_matches <- HLY_station_info[HLY_station_info$Province == province &
+                                         HLY_station_info$HLY.First.Year <= year &
+                                         HLY_station_info$HLY.Last.Year >= year, ]
 
   province_station_count <- nrow(province_matches)
   if (province_station_count == 0) {

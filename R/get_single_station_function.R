@@ -14,14 +14,12 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
   if(!dir.exists(root_folder))
     dir.create(root_folder, recursive = TRUE)
 
-  HLY_stations <- read.csv(system.file("data", "HLY_station_info.csv", package = "castform"))
-
   # No station name or id provided
   if (is.null(station_name) && is.null(station_id))
     stop("Provide a station_name or station_id.")
 
   if (is.null(station_name) || is.na(station_name)) {
-    station_matches <- HLY_stations[HLY_stations$Station.ID == station_id, ]
+    station_matches <- HLY_station_info[HLY_station_info$Station.ID == station_id, ]
     if (nrow(station_matches) == 0) {
       message("Station ID ", station_id, " not found.");
       return(NULL)
@@ -30,7 +28,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
 
   } else {
     station_name <- toupper(gsub('"', '', station_name))
-    station_matches <- HLY_stations[toupper(HLY_stations$stationName) == station_name, ]
+    station_matches <- HLY_station_info[toupper(HLY_station_info$stationName) == station_name, ]
 
     # No station id provided
     if (nrow(station_matches) == 0) {
@@ -52,7 +50,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
   }
 
   # No month provided
-  if (is.null(month) || is.na(month) || month < 1 || month > 12) {
+  if (is.null(month) || is.na(month)) {
     message("Invalid or missing month. Defaulting to January (1).")
     month <- 1
   }
@@ -66,6 +64,14 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
     month <- match(month_clean, tolower(month.abb))
   }
 
+  month <- as.numeric(month)
+
+  # invalid month provided
+  if (is.na(month) || month < 1 || month > 12) {
+    message("Invalid or missing month. Defaulting to January (1).")
+    month <- 1
+  }
+
   # Filter by year activity
   valid_matches <- station_matches[station_matches$HLY.First.Year <= year & station_matches$HLY.Last.Year >= year, ]
 
@@ -76,7 +82,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
 
   } else if (nrow(valid_matches) > 1 && is.null(station_id)) {
     message("\nMultiple stations found. Please provide a Station ID:")
-    print(valid_matches[, c("stationName", "Station.ID")], row.names = FALSE)
+    print(valid_matches[, c("stationName", "Station.ID", "HLY.First.Year", "HLY.Last.Year")], row.names = FALSE)
     return(NULL)
   }
 
@@ -87,7 +93,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
   }
 
   # Grab province for file path
-  provinces <- gsub(" ", "_", toupper(valid_matches[2]))
+  provinces <- gsub(" ", "_", toupper(valid_matches$Province[1]))
 
   file_station_name <- gsub(" ", "_", toupper(station_name))
   station_path  <- file.path(root_folder, provinces, paste0(file_station_name, "_", station_id), as.character(year))
@@ -100,6 +106,11 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
                 "&Day=14&timeframe=1")
 
   station_downloads <- file.path(station_path , paste0(file_station_name, "_", station_id, "_", year, "_", sprintf("%02d", month), ".csv"))
+
+  if (httr::http_error(url)) {
+    warning("URL does not exist or failed to build: ", url)
+    return(FALSE)
+  }
 
   tryCatch({
     download.file(url, station_downloads, mode = "wb")

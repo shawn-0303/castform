@@ -15,8 +15,6 @@
 #' @export
 year_range_station_files <- function(station_name = NULL, station_id = NULL, start_year = NULL, end_year = NULL, parallel_threshold = 50) {
 
-  HLY_stations <- read.csv(system.file("data", "HLY_station_info.csv", package = "castform"))
-
   # No station name or id provided
   if (is.null(station_name) && is.null(station_id)) {
     stop("Provide station_name or station_id.")
@@ -24,7 +22,7 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
 
   # No station name provided
   if (is.null(station_name) || is.na(station_name)) {
-    match_index <- HLY_stations[HLY_stations$Station.ID == station_id, ]
+    match_index <- HLY_station_info[HLY_station_info$Station.ID == station_id, ]
     if (nrow(match_index) == 0) {
       message("Station ID ", station_id, " not found."); return(NULL)
     }
@@ -32,7 +30,7 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
 
   } else {
     station_name <- toupper(gsub('"', '', station_name))
-    match_index <- HLY_stations[toupper(HLY_stations$stationName) == station_name, ]
+    match_index <- HLY_station_info[toupper(HLY_station_info$stationName) == station_name, ]
 
     # No station id provided
     if (nrow(match_index) == 0) {

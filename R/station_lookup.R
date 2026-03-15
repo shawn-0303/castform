@@ -9,14 +9,12 @@
 #' @export
 station_lookup <- function(province = NULL, start_year = NULL, end_year = NULL) {
 
-  HLY_stations <- read.csv(system.file("data", "HLY_station_info.csv", package = "castform"))
-
   # No search parameters provided
   if (is.null(province) && is.null(start_year) && is.null(end_year)) {
     stop("Provide at least one station search parameter (province, start_year, or end_year).")
   }
 
-  search_matches <- HLY_stations
+  search_matches <- HLY_station_info
 
   # Province provided
   if (!is.null(province)) {

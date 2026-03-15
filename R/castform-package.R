@@ -6,6 +6,7 @@
 #' @importFrom future multisession
 #' @importFrom future plan
 #' @importFrom future sequential
+#' @importFrom httr http_error
 #'
 #' @section Main functions:
 #' \itemize{
