@@ -20,11 +20,13 @@ province_station_files <- function(province, year = NULL, month = NULL, parallel
   HLY_stations <- read.csv(system.file("data", "HLY_station_info.csv", package = "castform"))
   province_subset <- HLY_stations[HLY_stations$Province == province, ]
 
+  # Province misspelling
   if (nrow(province_subset) == 0) {
     message(paste("No stations found in ", province, "."))
     return(NULL)
   }
 
+  # No year provided
   if (is.null(year) || is.na(year)) {
     year <- min(province_subset$HLY.First.Year, na.rm = TRUE)
     message("No year provided. Defaulting to earliest records: ", year)
@@ -34,6 +36,12 @@ province_station_files <- function(province, year = NULL, month = NULL, parallel
   if (is.null(month) || is.na(month) || month < 1 || month > 12) {
     message("Invalid or missing month. Defaulting to January (1).")
     month <- 1
+  }
+
+  # Character year provided
+  if (is.character(year)) {
+    message("Invalid input: 'year' must be a number or a numeric string.")
+    return(NULL)
   }
 
   # Character month provided

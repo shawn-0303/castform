@@ -29,3 +29,9 @@ province_station_files(province = "prince edward island",
 
 get_single_station_file(station_name = "discovery island",
                         month = "jan")
+
+
+station_lookup(province = "onTaRio",
+               start_year = 1233,
+               end_year = 2020)
+
