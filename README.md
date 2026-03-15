@@ -40,7 +40,7 @@ get_multiple_station_files(station_name = "discovery island",
                            
 province_station_files(province = "prince edward island",
                        year = 1980,
-                       month = "february"",
+                       month = "february",
                        parallel_threshold = 50)
                        
 year_range_station_files(station_name = "discovery island",
