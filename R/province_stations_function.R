@@ -14,8 +14,11 @@
 #' @export
 province_station_files <- function(province, year = NULL, month = NULL, parallel_threshold = 50) {
 
+  # No station name or id provided
+  if (is.null(province) && any(is.null(province)))
+    stop("Provide a province or territory")
+
   province = toupper(gsub('"', '', province))
-  download_months = if(is.null(month)) 1:12 else month
 
   province_subset <- HLY_station_info[HLY_station_info$Province == province, ]
 
