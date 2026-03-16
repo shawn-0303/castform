@@ -1,11 +1,11 @@
 library(testthat)
 
 test_that("Test station id and year inputs", {
-  temp_dir <- tempfile("test_data")
+  temp_dir <- file.path(tempdir(), "station_data")
 
   # Test 1: should return error for no inputs
   expect_error(
-    get_single_station_file(),
+    get_single_station_file(root_folder = temp_dir),
     "Provide a station_name or station_id"
   )
 
@@ -53,7 +53,7 @@ test_that("Test year inputs", {
 })
 
 test_that("Test month inputs", {
-  temp_dir <- tempfile("test_data")
+  temp_dir <- file.path(tempdir(), "station_data")
 
   test_month <- function(m) {
     if (is.null(m) || is.na(m))
@@ -119,7 +119,7 @@ test_that("Test month inputs", {
 })
 
 test_that("Test station matching", {
-  temp_dir <- tempfile("test_data")
+  temp_dir <- file.path(tempdir(), "station_data")
 
   # Test 1: should be a successful match
   expect_true({results <- get_single_station_file(station_name =  "discovery island",
@@ -145,7 +145,7 @@ test_that("Test station matching", {
 })
 
 test_that("Test file path, URL creation, and download", {
-  temp_dir <- tempfile("test_data")
+  temp_dir <- file.path(tempdir(), "station_data")
 
   # Test 1: should be a valid result
   valid_result <- get_single_station_file(station_name = "discovery island",
@@ -174,3 +174,4 @@ test_that("Test file path, URL creation, and download", {
   expect_warning(get_single_station_file(station_id = 27226), "Download failed")
     }
   )
+

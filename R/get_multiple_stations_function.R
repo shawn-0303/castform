@@ -80,12 +80,6 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     number_of_files <- 1
   }
 
-  # For spelling errors
-  if (nrow(station_matches) == 0) {
-    message(paste0("\nNo station matching '", station_name, ". Please check spelling."))
-    return(NULL)
-  }
-
   valid_matches <- station_matches[station_matches$HLY.First.Year <= year & station_matches$HLY.Last.Year >= year, ]
 
   # For years with no data
@@ -112,6 +106,18 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     mo = (total_months %% 12) + 1
   )
 
+  if (number_of_files >= 50) {
+    if (interactive()) {
+      msg <- paste("You are about to download ", number_of_files, " files. Continue to download?")
+      ans <- utils::askYesNo(msg)
+
+      if (!isTRUE(ans)) {
+        message("Download cancelled by user.")
+        return(invisible(NULL))
+      }
+    }
+  }
+
   if (number_of_files  >= parallel_threshold) {
 
     message(paste("Parallelization threshold met. Using ", 3, " cores to download ", number_of_files, "files"))
@@ -119,7 +125,7 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     plan(multisession, workers = 3)
 
     future_pwalk(task_list, function(yr, mo) {
-      get_single_station_file(station_name = station_name,
+      ~get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = yr,
                               month = mo,
@@ -132,7 +138,7 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     message(paste("Downloading ", number_of_files, " files sequentially."))
 
     pwalk(task_list, function(yr, mo) {
-      get_single_station_file(station_name = station_name,
+      ~get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = yr,
                               month = mo,
