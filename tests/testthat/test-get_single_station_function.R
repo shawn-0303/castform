@@ -9,19 +9,19 @@ test_that("Test station id and year inputs", {
     "Provide a station_name or station_id"
   )
 
-  # Test 2/3: should return a message and NULL if unvalid station ID is provided
+  # Test 2/3: should return a message and NULL if invalid station ID is provided
   expect_message({results <- get_single_station_file(station_id = 1234,
                                                      root_folder = temp_dir)
   expect_null(results)},
   "not found")
 
-  # Test 4/5: should return message and NULL if unvalid station name is provided
+  # Test 4/5: should return message and NULL if invalid station name is provided
   expect_message({results <- get_single_station_file(station_name =  "discovery",
                                                      root_folder = temp_dir)
   expect_null(results)},
   "Check spelling.")
 
-  # Test 6: should return message and autofill staion id
+  # Test 6: should return message and autofill station id
   expect_message({results <- get_single_station_file(station_name =  "discovery island",
                                                      year = 1997,
                                                      month = "1",
