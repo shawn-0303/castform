@@ -51,6 +51,12 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
     end_year <- start_year
   }
 
+  # Character year provided
+  if (is.character(start_year) || is.character(end_year)) {
+    message("Invalid input: 'start_year' and `end_year` must be a number.")
+    return(NULL)
+  }
+
   valid_range <- match_index[match_index$HLY.First.Year <= start_year & match_index$HLY.Last.Year >= end_year, ]
 
   # For years with no data

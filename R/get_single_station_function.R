@@ -45,7 +45,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
 
   # Character year provided
   if (is.character(year)) {
-    message("Invalid input: 'year' must be a number or a numeric string.")
+    message("Invalid input: 'year' must be a number.")
     return(NULL)
   }
 

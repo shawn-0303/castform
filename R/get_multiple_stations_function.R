@@ -39,13 +39,20 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     }
   }
 
+  # No year provided
   if (is.null(year) || is.na(year)) {
     year <- min(station_matches$HLY.First.Year, na.rm = TRUE)
     message(paste("No year provided. Starting from earliest records in", year))
   }
 
+  # Character year provided
+  if (is.character(year)) {
+    message("Invalid input: 'year' must be a number.")
+    return(NULL)
+  }
+
   # No month provided
-  if (is.null(month) || is.na(month) || month < 1 || month > 12) {
+  if (is.null(month) || is.na(month)) {
     message("Invalid or missing month. Defaulting to January (1).")
     month <- 1
   }
@@ -57,6 +64,14 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     month <- match(month_clean, tolower(month.name))
   } else if (month_clean %in% tolower(month.abb)) {
     month <- match(month_clean, tolower(month.abb))
+  }
+
+  month <- as.numeric(month)
+
+  # invalid month provided
+  if (is.na(month) || month < 1 || month > 12) {
+    message("Invalid or missing month. Defaulting to January (1).")
+    month <- 1
   }
 
   # No number of files provided
