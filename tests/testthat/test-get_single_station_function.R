@@ -1,14 +1,18 @@
 library(testthat)
 
 test_that("Test station id and year inputs", {
-  temp_dir <- file.path(tempdir(), "station_data")
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+    },  .package = "utils")
 
   # Test 1: should return error for no inputs
-  expect_error(
-    get_single_station_file(root_folder = temp_dir),
-    "Provide a station_name or station_id"
-  )
-
+  expect_error(get_single_station_file(root_folder  = temp_dir),
+              "Provide a station_name or station_id")
   # Test 2/3: should return a message and NULL if invalid station ID is provided
   expect_message({results <- get_single_station_file(station_id = 1234,
                                                      root_folder = temp_dir)
@@ -26,7 +30,7 @@ test_that("Test station id and year inputs", {
                                                      year = 1997,
                                                      month = "1",
                                                      root_folder = temp_dir)},
-  "Auto-filled Station ID")
+                 "Auto-filled Station ID")
 
   # Test 7: should match station id to station name
   results <- get_single_station_file(station_id = 27226,
@@ -37,7 +41,14 @@ test_that("Test station id and year inputs", {
 })
 
 test_that("Test year inputs", {
-  temp_dir <- tempfile("test_data")
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+  },  .package = "utils")
 
   # Test 1: should return message if no year was provided
   expect_message({results <- get_single_station_file(station_name =  "discovery island",
@@ -53,7 +64,14 @@ test_that("Test year inputs", {
 })
 
 test_that("Test month inputs", {
-  temp_dir <- file.path(tempdir(), "station_data")
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+  },  .package = "utils")
 
   test_month <- function(m) {
     if (is.null(m) || is.na(m))
@@ -115,11 +133,12 @@ test_that("Test month inputs", {
                                       month = "Feb",
                                       year = 1997,
                                       root_folder = temp_dir))
-
 })
 
 test_that("Test station matching", {
-  temp_dir <- file.path(tempdir(), "station_data")
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
 
   # Test 1: should be a successful match
   expect_true({results <- get_single_station_file(station_name =  "discovery island",
@@ -144,10 +163,17 @@ test_that("Test station matching", {
   "Multiple stations found")
 })
 
-test_that("Test file path, URL creation, and download", {
-  temp_dir <- file.path(tempdir(), "station_data")
+test_that("Test station download", {
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
 
-  # Test 1: should be a valid result
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+  },  .package = "utils")
+
+  # Test 1: Should be a valid result
   valid_result <- get_single_station_file(station_name = "discovery island",
                                           year = 1997,
                                           station_id = 27226,
@@ -165,13 +191,20 @@ test_that("Test file path, URL creation, and download", {
   expect_true(file.exists(expected_file))
 
   # Test 4: should return warning after checking for non-existent URL
-  mockery::stub(get_single_station_file, "httr::http_error", TRUE)
-  expect_warning(get_single_station_file(station_id = 27226), "URL does not exist")
+  testthat::with_mocked_bindings(
+    http_error = function(...) TRUE,
+    code = {expect_warning(get_single_station_file(station_id = 27226, year = 1997, root_folder = temp_dir),
+            "URL does not exist")
+    },.package = "httr")
 
   # Test 5: Should return warning after file download fails.
-  mockery::stub(get_single_station_file, "httr::http_error", FALSE)
-  mockery::stub(get_single_station_file, "download.file", function(...) stop("Network Down"))
-  expect_warning(get_single_station_file(station_id = 27226), "Download failed")
-    }
-  )
+  testthat::with_mocked_bindings(
+    download.file = function(...) stop("Network Down"),
+    code = {expect_warning(get_single_station_file(station_id = 27226, year = 1997, root_folder = temp_dir),
+            "Download failed")
+    },.package = "utils")
+})
+
+
+
 

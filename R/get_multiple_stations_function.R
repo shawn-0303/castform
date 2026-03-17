@@ -14,7 +14,10 @@
 #' @importFrom purrr pwalk
 #'
 #' @export
-get_multiple_station_files <- function(station_name = NULL, station_id = NULL, number_of_files = NULL, year = NULL, month = NULL, parallel_threshold = 50) {
+get_multiple_station_files <- function(station_name = NULL, station_id = NULL, number_of_files = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data") {
+
+  if(!dir.exists(root_folder))
+    dir.create(root_folder, recursive = TRUE)
 
   # No station name or id provided
   if (is.null(station_name) && any(is.null(station_id)))
@@ -124,12 +127,12 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
 
     plan(multisession, workers = 3)
 
-    future_pwalk(task_list, function(yr, mo) {
-      ~get_single_station_file(station_name = station_name,
+    future_pwalk(task_list, function(yr, mo, ...) {
+      get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = "station_data")
+                              root_folder = root_folder)
     }, .options = furrr_options(seed = TRUE))
 
     plan(sequential)
@@ -137,12 +140,12 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
   } else {
     message(paste("Downloading ", number_of_files, " files sequentially."))
 
-    pwalk(task_list, function(yr, mo) {
-      ~get_single_station_file(station_name = station_name,
+    pwalk(task_list, function(yr, mo, ...) {
+      get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = "station_data")
+                              root_folder = root_folder)
     })
   }
 }

@@ -10,15 +10,20 @@
 #' @importFrom future plan multisession sequential
 #' @importFrom furrr future_pwalk furrr_options
 #' @importFrom purrr pwalk
+#' @importFrom utils askYesNo
 #'
 #' @export
-province_station_files <- function(province, year = NULL, month = NULL, parallel_threshold = 50) {
+province_station_files <- function(province = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data") {
+
+  if(!dir.exists(root_folder))
+    dir.create(root_folder, recursive = TRUE)
 
   # No station name or id provided
-  if (is.null(province) && any(is.null(province)))
+  if (is.null(province) || is.na(province))
     stop("Provide a province or territory")
 
   province = toupper(gsub('"', '', province))
+  download_months <- 1:12
 
   province_subset <- HLY_station_info[HLY_station_info$Province == province, ]
 
@@ -91,29 +96,30 @@ province_station_files <- function(province, year = NULL, month = NULL, parallel
   }
 
   if (total_files > parallel_threshold) {
-    plan(multisession, workers = 3)
 
     message("Parallelization threshold met. Using ", 3, " cores to download ", total_files, " files.")
 
-    future_pwalk(task_list, function(station_name, station_id, month) {
+    plan(multisession, workers = 3)
+
+    future_pwalk(task_list, function(station_name, station_id, month, ...) {
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = year,
                               month = month,
-                              root_folder = "station_data")
+                              root_folder = root_folder)
     }, .options = furrr_options(seed = TRUE))
 
     plan(sequential)
 
   } else {
-    message("Downloading ", total_files, " files sequentially...")
+    message(paste("Downloading ", total_files, " files sequentially..."))
 
-    pwalk(task_list, function(station_name, station_id, month) {
+    pwalk(task_list, function(station_name, station_id, month, ...) {
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = year,
                               month = month,
-                              root_folder = "station_data")
+                              root_folder = root_folder)
     })
   }
 }

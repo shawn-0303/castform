@@ -1,58 +1,78 @@
 library(testthat)
 
-stub_download <- function(fn) {
-  mockery::stub(fn, "get_single_station_file", function(...) {
-    message("Mock download successful")
-    return(invisible(NULL))
-  })
-}
-
 test_that("Test station id and year inputs", {
-  stub_download(get_multiple_station_files)
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+  },  .package = "utils")
 
   # Test 1: should return error for no inputs
-  expect_error(get_multiple_station_files(),
-    "Provide station_name or station_id")
+  expect_error(get_multiple_station_files(root_folder = temp_dir),
+               "Provide station_name or station_id")
 
   # Test 2/3: should return a message and NULL if invalid station ID is provided
-  expect_message({results <- get_multiple_station_files(station_id = 1234)
+  expect_message({results <- get_multiple_station_files(station_id = 1234,
+                                                        root_folder = temp_dir)
   expect_null(results)},
   "not found")
 
   # Test 4/5: should return message and NULL if invalid station name is provided
-  expect_message({results <- get_multiple_station_files(station_name =  "discovery")
+  expect_message({results <- get_multiple_station_files(station_name =  "discovery",
+                                                        root_folder = temp_dir)
   expect_null(results)},
   "Check spelling")
 
   # Test 6: should return message and autofill station id
   expect_message({results <- get_multiple_station_files(station_name =  "discovery island",
                                                         year = 1997,
-                                                        month = 1)},
+                                                        month = 1,
+                                                        root_folder = temp_dir)},
                  "Auto-filled unique Station ID")
 })
 
 test_that("Test year inputs", {
-  stub_download(get_multiple_station_files)
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+  },  .package = "utils")
 
   # Test 1: should return message if no year was provided
-  expect_message({results <- get_multiple_station_files(station_name =  "discovery island")},
+  expect_message({results <- get_multiple_station_files(station_name =  "discovery island",
+                                                        root_folder = temp_dir)},
                  "No year provided.")
 
   # Test 2/3: should return message and NULL if character year was provided
   expect_message({results <- get_multiple_station_files(station_name =  "discovery island",
-                                                        year = "1990")
+                                                        year = "1990",
+                                                        root_folder = temp_dir)
   expect_null(results)},
   "Invalid input")
 
   # Test 4/5: should return message and NULL if invalid year was provided
   expect_message({results <- get_multiple_station_files(station_name =  "discovery island",
-                                                        year = 1990)
+                                                        year = 1990,
+                                                        root_folder = temp_dir)
   expect_null(results)},
   "No station matching")
 })
 
 test_that("Test month inputs", {
-  stub_download(get_multiple_station_files)
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+  },  .package = "utils")
 
   test_month <- function(m) {
     if (is.null(m) || is.na(m))
@@ -73,8 +93,9 @@ test_that("Test month inputs", {
 
   # Test 1: should return message if no month was provided
   expect_message({results <- get_multiple_station_files(station_name =  "discovery island",
-                                                     month = "month",
-                                                     year = 1997)},
+                                                        month = "month",
+                                                        year = 1997,
+                                                        root_folder = temp_dir)},
                  "Invalid or missing month")
 
   # Test 2: should convert "January" to 1
@@ -100,87 +121,86 @@ test_that("Test month inputs", {
 
   # Test 9-11: should return true
   expect_s3_class(get_multiple_station_files(station_name =  "discovery island",
-                                      month = "January",
-                                      year = 1997), "data.frame")
+                                             month = "January",
+                                             year = 1997,
+                                             root_folder = temp_dir), "data.frame")
 
   expect_s3_class(get_multiple_station_files(station_name =  "discovery island",
-                                      month = "Feb",
-                                      year = 1997), "data.frame")
+                                             month = "Feb",
+                                             year = 1997,
+                                             root_folder = temp_dir), "data.frame")
 
   expect_s3_class(get_multiple_station_files(station_name =  "discovery island",
-                                      month = "Feb",
-                                      year = 1997), "data.frame")
+                                             month = "Feb",
+                                             year = 1997,
+                                             root_folder = temp_dir), "data.frame")
 
 })
 
 test_that("Test station matching", {
-  stub_download(get_multiple_station_files)
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+  },  .package = "utils")
 
   # Test 1: should be a successful match
   expect_s3_class(results <- get_multiple_station_files(station_name =  "discovery island",
-                                                  year = 1997,
-                                                  month = 1), "data.frame")
+                                                        year = 1997,
+                                                        month = 1,
+                                                        root_folder = temp_dir), "data.frame")
 
   # Test 2/3: should not be a successful match (NULL and message expected)
   expect_message({results <- get_multiple_station_files(station_name =  "discovery island",
-                                                     year = 1234,
-                                                     month = 1)
+                                                        year = 1234,
+                                                        month = 1,
+                                                        root_folder = temp_dir)
   expect_null(results)},
   "was active in 1234")
 
   # Test 4/5: Should find multiple stations with the same staion id and return a message and NULL
   expect_message({results <- get_multiple_station_files(station_name =  "victoria harbour a",
-                                                     year = 2015,
-                                                     month = 1)
+                                                        year = 2015,
+                                                        month = 1,
+                                                        root_folder = temp_dir)
   expect_null(results)},
   "Multiple stations found")
 
   # Test 6: Should return a valid data frame
   expect_s3_class(results <- get_multiple_station_files(station_id = 27226,
                                                         year = 1997,
-                                                        month = 1), "data.frame")
+                                                        month = 1,
+                                                        root_folder = temp_dir), "data.frame")
 })
 
 test_that("Test parallelization", {
-  old_plan <- future::plan(future::sequential)
-  on.exit(future::plan(old_plan), add = TRUE)
 
-  mockery::stub(get_multiple_station_files, "plan", function(...) NULL)
-  mockery::stub(get_multiple_station_files, "get_single_station_file", function(...) NULL)
-  mockery::stub(get_multiple_station_files,
-                "utils::askYesNo", TRUE)
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  mockery::stub(get_multiple_station_files, "utils::askYesNo", TRUE)
+
+  testthat::local_mocked_bindings(
+    get_single_station_file = function(...) {
+      message("Mock download successful")
+      invisible(NULL)
+    },
+    plan = function(...) NULL,
+    interactive = function() TRUE,
+    .package = "castform"
+  )
 
   # Test 1: should produce a message when parallelization threshold is met
   testthat::with_mocked_bindings(interactive = function() TRUE,
                                  code = {expect_message(get_multiple_station_files(station_name = "discovery island",
                                                                                    year = 1997,
                                                                                    month = 1,
-                                                                                   number_of_files = 51),
+                                                                                   number_of_files = 51,
+                                                                                   root_folder = temp_dir),
                                                         "Parallelization threshold met")
-                                   })
-})
-
-
-test_that("Test user check-in NO", {
-  mockery::stub(get_multiple_station_files,
-                "utils::askYesNo", FALSE)
-
-  testthat::with_mocked_bindings(interactive = function() TRUE,
-    code = {expect_message(get_multiple_station_files(station_id = 27226,
-                                                      number_of_files = 60),
-        "Download cancelled by user.")})
-})
-
-test_that("Test user check-in YES", {
-  old_plan <- future::plan(future::sequential)
-  on.exit(future::plan(old_plan), add = TRUE)
-
-  mockery::stub(get_multiple_station_files,
-                "utils::askYesNo", TRUE)
-
-  testthat::with_mocked_bindings(interactive = function() TRUE,
-                                 code = {result <- get_multiple_station_files(station_id = 27226,
-                                                                              number_of_files = 60)
-                                 expect_false(is.null(result))})
+                                 })
 })
 

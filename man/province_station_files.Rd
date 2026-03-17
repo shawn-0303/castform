@@ -5,7 +5,7 @@
 \title{Province Station Files}
 \usage{
 province_station_files(
-  province,
+  province = NULL,
   year = NULL,
   month = NULL,
   parallel_threshold = 50
