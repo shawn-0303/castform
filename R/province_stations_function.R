@@ -23,7 +23,6 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     stop("Provide a province or territory")
 
   province = toupper(gsub('"', '', province))
-  download_months <- 1:12
 
   province_subset <- HLY_station_info[HLY_station_info$Province == province, ]
 
@@ -39,16 +38,16 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     message("No year provided. Defaulting to earliest records: ", year)
   }
 
-  # No month provided
-  if (is.null(month) || is.na(month) || month < 1 || month > 12) {
-    message("Invalid or missing month. Defaulting to January (1).")
-    month <- 1
-  }
-
   # Character year provided
   if (is.character(year)) {
     message("Invalid input: 'year' must be a number or a numeric string.")
     return(NULL)
+  }
+
+  # No month provided
+  if (is.null(month) || is.na(month)) {
+    message("Invalid or missing month. Defaulting to January (1).")
+    month <- 1
   }
 
   # Character month provided
@@ -58,6 +57,14 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     month <- match(month_clean, tolower(month.name))
   } else if (month_clean %in% tolower(month.abb)) {
     month <- match(month_clean, tolower(month.abb))
+  }
+
+  month <- as.numeric(month)
+
+  # invalid month provided
+  if (is.na(month) || month < 1 || month > 12) {
+    message("Invalid or missing month. Defaulting to January (1).")
+    month <- 1
   }
 
   province_matches <- HLY_station_info[HLY_station_info$Province == province &
@@ -77,7 +84,7 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
 
   task_list <- tidyr::expand_grid(
     stations_to_download,
-    month        = download_months
+    month        = month
   )
 
   total_files <- nrow(task_list)

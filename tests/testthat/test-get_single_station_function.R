@@ -1,5 +1,19 @@
 library(testthat)
 
+test_that("Test directory creation", {
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+  if (dir.exists(temp_dir)) unlink(temp_dir, recursive = TRUE)
+
+  # Test 1: should create new directory
+  results <- get_single_station_file(station_name =  "discovery island",
+                                    year = 1997,
+                                    month = "1",
+                                    root_folder = temp_dir)
+
+  expect_true(dir.exists(temp_dir))
+})
+
 test_that("Test station id and year inputs", {
   temp_dir <- file.path(tempdir(), "castform_tests")
   dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)

@@ -1,5 +1,19 @@
 library(testthat)
 
+test_that("Test directory creation", {
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+  if (dir.exists(temp_dir)) unlink(temp_dir, recursive = TRUE)
+
+  # Test 1: should create new directory
+  results <- get_multiple_station_files(station_name =  "discovery island",
+                                        year = 1997,
+                                        month = 1,
+                                        root_folder = temp_dir)
+
+  expect_true(dir.exists(temp_dir))
+})
+
 test_that("Test station id and year inputs", {
   temp_dir <- file.path(tempdir(), "castform_tests")
   dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
@@ -131,7 +145,7 @@ test_that("Test month inputs", {
                                              root_folder = temp_dir), "data.frame")
 
   expect_s3_class(get_multiple_station_files(station_name =  "discovery island",
-                                             month = "Feb",
+                                             month = "10",
                                              year = 1997,
                                              root_folder = temp_dir), "data.frame")
 
@@ -204,3 +218,30 @@ test_that("Test parallelization", {
                                  })
 })
 
+test_that("Test user check-in NO", {
+  mockery::stub(get_multiple_station_files,
+                "utils::askYesNo", FALSE)
+
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
+
+  testthat::local_mocked_bindings(
+    get_single_station_file = function(...) {
+      message("Mock download successful")
+      invisible(NULL)
+    },
+    plan = function(...) NULL,
+    interactive = function() TRUE,
+    .package = "castform"
+  )
+
+  # Test 1: Should return NULL and message when large downloads are cancelled
+  testthat::with_mocked_bindings(interactive = function() TRUE,
+                                 code = {expect_message({results <- get_multiple_station_files(station_name = "discovery island",
+                                                                                               year = 1997,
+                                                                                               month = 1,
+                                                                                               number_of_files = 51,
+                                                                                               root_folder = temp_dir)
+                                 expect_null(results)},
+                                 "Download cancelled by user.")})
+})

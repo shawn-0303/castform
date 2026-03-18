@@ -1,5 +1,22 @@
 library(testthat)
 
+test_that("Test directory creation", {
+  temp_dir <- file.path(tempdir(), "castform_tests")
+  if (dir.exists(temp_dir)) unlink(temp_dir, recursive = TRUE)
+
+  testthat::local_mocked_bindings(download.file = function(url, destfile, ...) {
+    dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
+    write.csv(data.frame(status = "mocked download"), destfile)
+    return(0)
+  },  .package = "utils")
+
+  # Test 1: should create new directory
+  results <- province_station_files(province = "ontario",
+                                    root_folder = temp_dir)
+
+  expect_true(dir.exists(temp_dir))
+})
+
 test_that("Test province inputs", {
   temp_dir <- file.path(tempdir(), "castform_tests")
   dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
@@ -91,6 +108,7 @@ test_that("Test month inputs", {
   # Test 1: should return message if no month was provided
   expect_message({results <- province_station_files(province = "ontario",
                                                     year = 1997,
+                                                    month = "month",
                                                     root_folder = temp_dir)},
                  "Invalid or missing month")
 
@@ -114,15 +132,25 @@ test_that("Test month inputs", {
 
   # Test 8: should convert 13 to 1
   expect_equal(test_month(13), 1)
+
+  # Test 9-10: should be valid inputs
+  expect_s3_class(province_station_files(province = "prince edward island",
+                                         month = "JaNuary",
+                                         year = 1997,
+                                         root_folder = temp_dir), "data.frame")
+
+  expect_s3_class(province_station_files(province = "prince edward island",
+                                         month = "Feb",
+                                         year = 1997,
+                                         root_folder = temp_dir), "data.frame")
 })
 
 test_that("Test user check-in NO", {
+  mockery::stub(province_station_files,
+                "utils::askYesNo", FALSE)
+
   temp_dir <- file.path(tempdir(), "castform_tests")
   dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
-
-  mockery::stub(province_station_files, "interactive", TRUE)
-  mockery::stub(province_station_files, "utils::askYesNo", FALSE)
-
 
   testthat::local_mocked_bindings(
     get_single_station_file = function(...) {
@@ -137,6 +165,7 @@ test_that("Test user check-in NO", {
   # Test 1: Should return NULL and message when large downloads are cancelled
   testthat::with_mocked_bindings(interactive = function() TRUE,
                                  code = {expect_message({results <- province_station_files(province = "ontario",
+                                                                                           year = 1998,
                                                                                            root_folder = temp_dir)
                                  expect_null(results)},
                                  "Download cancelled by user.")})

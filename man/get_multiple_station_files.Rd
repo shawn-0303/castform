@@ -10,7 +10,8 @@ get_multiple_station_files(
   number_of_files = NULL,
   year = NULL,
   month = NULL,
-  parallel_threshold = 50
+  parallel_threshold = 50,
+  root_folder = "station_data"
 )
 }
 \arguments{

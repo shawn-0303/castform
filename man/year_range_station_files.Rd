@@ -9,7 +9,8 @@ year_range_station_files(
   station_id = NULL,
   start_year = NULL,
   end_year = NULL,
-  parallel_threshold = 50
+  parallel_threshold = 50,
+  root_folder = "station_data"
 )
 }
 \arguments{

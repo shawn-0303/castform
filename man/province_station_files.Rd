@@ -8,7 +8,8 @@ province_station_files(
   province = NULL,
   year = NULL,
   month = NULL,
-  parallel_threshold = 50
+  parallel_threshold = 50,
+  root_folder = "station_data"
 )
 }
 \arguments{
