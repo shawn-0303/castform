@@ -6,11 +6,13 @@
 #' @param year Numeric Integer: The year of the data pull. If left empty, will default to the first year for data collection for that particular station.
 #' @param month Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to January (1).
 #' @param parallel_threshold Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.
+#' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #'
 #' @importFrom future plan multisession sequential
 #' @importFrom furrr future_pwalk furrr_options
 #' @importFrom purrr pwalk
 #' @importFrom utils askYesNo
+#' @importFrom utils download.file
 #'
 #' @export
 province_station_files <- function(province = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data") {

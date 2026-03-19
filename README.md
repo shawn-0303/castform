@@ -36,18 +36,21 @@ get_multiple_station_files(station_name = "discovery island",
                            number_of_files = 10,
                            year = 1997,
                            month = 1,
-                           parallel_threshold = 50)
+                           parallel_threshold = 50,
+                           root_folder = "station_data")
                            
 province_station_files(province = "prince edward island",
                        year = 1980,
                        month = "february",
-                       parallel_threshold = 50)
+                       parallel_threshold = 50,
+                       root_folder = "station_data")
                        
 year_range_station_files(station_name = "discovery island",
                          station_id = 27226,
                          start_year = 1997,
                          end_year = 1999,
-                         parallel_threshold = 50)
+                         parallel_threshold = 50,
+                         root_folder = "station_data")
                          
 get_all_files()
 

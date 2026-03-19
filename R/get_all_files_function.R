@@ -1,18 +1,32 @@
-#' Get All Files
+#' Get All Hourly Station Files
 #'
 #' Downloads all Environment Canada data from all stations with hourly data available.
 #'
+#' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#'
+#' @importFrom utils download.file
+#'
 #' @export
-get_all_files <- function( ) {
-  download_dir <- "all_station_data"
+get_all_files <- function(root_folder = "station_data") {
 
-  global_task_list <- tidyr::expand_grid(HLY_station_info,
-                                         year = 1980:2020,
-                                         month = 1:12) %>%
-    dplyr::filter(year >= HLY.First.Year,
-                  year <= HLY.Last.Year)
+  total_files_overall <- 0
+  for (i in seq_len(nrow(HLY_station_info))) {
+    row <- HLY_station_info[i,]
+    begin_year <- max(1980, row$HLY.First.Year, na.rm = TRUE)
+    end_year <- min(2020, row$HLY.Last.Year, na.rm = TRUE)
+    if (begin_year <= end_year) {
+      total_files_overall <- total_files_overall + ((end_year - begin_year + 1) * 12)
+    }
+  }
 
-  total_files_overall <- nrow(global_task_list)
+  if (interactive() && total_files_overall > 0) {
+    msg <- paste0("You are about to download up to ", total_files_overall, " hourly files. Continue?")
+    ans <- utils::askYesNo(msg)
+    if (!isTRUE(ans)) {
+      message("Download cancelled by user.")
+      return(invisible(NULL))
+    }
+  }
 
   for (i in seq_len(nrow(HLY_station_info))) {
     row = HLY_station_info[i,]
@@ -23,22 +37,13 @@ get_all_files <- function( ) {
     end_year = row$HLY.Last.Year
 
     # Ensure we only pull data from 1980-2020
-    if (is.na(end_year) || end_year > 2020) end_year <- 2020
     if (is.na(begin_year) || begin_year  < 1980) begin_year <- 1980
+    if (is.na(end_year) || end_year > 2020) end_year <- 2020
 
     if (begin_year > end_year) next
 
-    if (total_files_overall >= 50 && interactive()) {
-      msg <- paste0("You are about to download ", total_files_overall, " files in total. Continue?")
-      ans <- utils::askYesNo(msg)
-      if (!isTRUE(ans)) {
-        message("Download cancelled by user.")
-        return(invisible(NULL))
-      }
-    }
-
     # Create download directory if one doesn't exist
-    station_downloads <- file.path(download_dir, province, paste0(station_name, "_", station_id))
+    station_downloads <- file.path(root_folder, province, paste0(station_name, "_", station_id), begin_year)
     if (!dir.exists(station_downloads)) dir.create(station_downloads, recursive = TRUE)
 
     for (year in begin_year:end_year) {
@@ -52,8 +57,19 @@ get_all_files <- function( ) {
 
         destination <- file.path(station_downloads, paste0(station_name, "_", station_id, "_", year, "_", sprintf("%02d", month), ".csv"))
 
-        download.file(url, destination, mode = "wb")
+        tryCatch({
+          download.file(url, destination, mode = "wb")
+          # if download fails, return the file that failed and remove the partial file.
+        }, error = function(e) {
+          if (file.exists(destination)) unlink(destination)
+          message("Download failed. Skipped: ", year, "-", month, " for ", station_name, ".")
+        })
       }
     }
   }
+  message("Download Complete.")
 }
+
+
+
+

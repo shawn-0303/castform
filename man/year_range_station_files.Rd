@@ -23,6 +23,8 @@ year_range_station_files(
 \item{end_year}{Numeric Integer: The end year of the data pull. If left empty, it will default to only downloading one year of data from the start_year}
 
 \item{parallel_threshold}{Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.}
+
+\item{root_folder}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
 }
 \description{
 Downloads a multiple weather station files collected between a specified time period from Environment Canada

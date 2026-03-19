@@ -2,9 +2,12 @@
 % Please edit documentation in R/get_all_files_function.R
 \name{get_all_files}
 \alias{get_all_files}
-\title{Get All Files}
+\title{Get All Hourly Station Files}
 \usage{
-get_all_files()
+get_all_files(root_folder = "station_data")
+}
+\arguments{
+\item{root_folder}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
 }
 \description{
 Downloads all Environment Canada data from all stations with hourly data available.

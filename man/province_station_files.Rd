@@ -20,6 +20,8 @@ province_station_files(
 \item{month}{Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to January (1).}
 
 \item{parallel_threshold}{Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.}
+
+\item{root_folder}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
 }
 \description{
 Download Environment Canada weather station files by province.

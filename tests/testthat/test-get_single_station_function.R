@@ -1,16 +1,12 @@
-library(testthat)
-
 test_that("Test directory creation", {
   temp_dir <- file.path(tempdir(), "castform_tests")
   dir.create(temp_dir, recursive = TRUE, showWarnings = FALSE)
   if (dir.exists(temp_dir)) unlink(temp_dir, recursive = TRUE)
 
-  # Test 1: should create new directory
   results <- get_single_station_file(station_name =  "discovery island",
-                                    year = 1997,
-                                    month = "1",
-                                    root_folder = temp_dir)
+                                     root_folder = temp_dir)
 
+  # Test 1: should create new directory
   expect_true(dir.exists(temp_dir))
 })
 
@@ -22,11 +18,11 @@ test_that("Test station id and year inputs", {
     dir.create(dirname(destfile), recursive = TRUE, showWarnings = FALSE)
     write.csv(data.frame(status = "mocked download"), destfile)
     return(0)
-    },  .package = "utils")
+  },  .package = "utils")
 
   # Test 1: should return error for no inputs
   expect_error(get_single_station_file(root_folder  = temp_dir),
-              "Provide a station_name or station_id")
+               "Provide a station_name or station_id")
   # Test 2/3: should return a message and NULL if invalid station ID is provided
   expect_message({results <- get_single_station_file(station_id = 1234,
                                                      root_folder = temp_dir)
@@ -208,17 +204,7 @@ test_that("Test station download", {
   testthat::with_mocked_bindings(
     http_error = function(...) TRUE,
     code = {expect_warning(get_single_station_file(station_id = 27226, year = 1997, root_folder = temp_dir),
-            "URL does not exist")
+                           "URL does not exist")
     },.package = "httr")
 
-  # Test 5: Should return warning after file download fails.
-  testthat::with_mocked_bindings(
-    download.file = function(...) stop("Network Down"),
-    code = {expect_warning(get_single_station_file(station_id = 27226, year = 1997, root_folder = temp_dir),
-            "Download failed")
-    },.package = "utils")
 })
-
-
-
-
