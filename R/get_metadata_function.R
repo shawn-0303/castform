@@ -32,6 +32,9 @@ get_metadata <- function() {
     names(HLY_station_info)[names(HLY_station_info) == "HLY First Year"] <- "HLY.First.Year"
     names(HLY_station_info)[names(HLY_station_info) == "HLY Last Year"]  <- "HLY.Last.Year"
 
+    HLY_station_info <- HLY_station_info[!is.na(HLY_station_info$HLY.First.Year) &
+                                           !is.na(HLY_station_info$HLY.Last.Year), ]
+
     save(station_metadata, file = rda_destination)
     save(HLY_station_info, file = working_file_destination)
     message("Downloaded latest station inventory from Environment Canada. \nSaved at: ", rda_destination)

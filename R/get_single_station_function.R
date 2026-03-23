@@ -15,6 +15,15 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
   if(!dir.exists(root_folder))
     dir.create(root_folder, recursive = TRUE)
 
+  # No metadata provided
+  if (is.null(HLY_station_info)) {
+    if (exists("HLY_station_info", envir = .GlobalEnv)) {
+      HLY_station_info <- get("HLY_station_info", envir = .GlobalEnv)
+    } else {
+      stop("HLY_station_info not found. Please run get_metadata() first.")
+    }
+  }
+
   # No station name or id provided
   if (is.null(station_name) && is.null(station_id))
     stop("Provide a station_name or station_id.")
@@ -114,7 +123,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
   }
 
   tryCatch({
-    download.file(url, station_downloads, mode = "wb")
+    download.file(url, station_downloads, mode = "wb", quiet = TRUE)
     return(TRUE)
   }, error = function(e) {
     warning("Download failed for URL: ", url);

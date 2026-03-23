@@ -18,9 +18,20 @@
 #'
 #' @export
 get_multiple_station_files <- function(station_name = NULL, station_id = NULL, number_of_files = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data", HLY_station_info = NULL) {
+  progressr::handlers(global = TRUE)
+  progressr::handlers("progress")
 
   if(!dir.exists(root_folder))
     dir.create(root_folder, recursive = TRUE)
+
+  # No metadata provided
+  if (is.null(HLY_station_info)) {
+    if (exists("HLY_station_info", envir = .GlobalEnv)) {
+      HLY_station_info <- get("HLY_station_info", envir = .GlobalEnv)
+    } else {
+      stop("HLY_station_info not found. Please run get_metadata() first.")
+    }
+  }
 
   # No station name or id provided
   if (is.null(station_name) && any(is.null(station_id)))
@@ -136,6 +147,9 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     }
   }
 
+  progressr::with_progress({
+    p <- progressr::progressor(steps = number_of_files)
+
   if (number_of_files  >= parallel_threshold) {
 
     message(paste("Parallelization threshold met. Using ", 3, " cores to download ", number_of_files, "files"))
@@ -143,12 +157,13 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     plan(multisession, workers = 3)
 
     future_pwalk(task_list, function(yr, mo, ...) {
+      p(sprintf("Downloading %s (%d-%02d)", station_name, yr, mo))
+
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder,
-                              HLY_station_info = HLY_station_info)
+                              root_folder = root_folder)
     }, .options = furrr_options(seed = TRUE))
 
     plan(sequential)
@@ -157,12 +172,15 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     message(paste("Downloading ", number_of_files, " files sequentially."))
 
     pwalk(task_list, function(yr, mo, ...) {
+      p(sprintf("Downloading %s (%d-%02d)", station_name, yr, mo))
+
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder,
-                              HLY_station_info = HLY_station_info)
+                              root_folder = root_folder)
     })
   }
+})
+  message("Download Complete.")
 }

@@ -10,6 +10,15 @@
 #' @export
 station_lookup <- function(province = NULL, start_year = NULL, end_year = NULL, HLY_station_info = NULL) {
 
+  # No metadata provided
+  if (is.null(HLY_station_info)) {
+    if (exists("HLY_station_info", envir = .GlobalEnv)) {
+      HLY_station_info <- get("HLY_station_info", envir = .GlobalEnv)
+    } else {
+      stop("HLY_station_info not found. Please run get_metadata() first.")
+    }
+  }
+
   # No search parameters provided
   if (is.null(province) && is.null(start_year) && is.null(end_year)) {
     stop("Provide at least one station search parameter (province, start_year, or end_year).")

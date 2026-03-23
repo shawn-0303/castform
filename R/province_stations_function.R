@@ -17,9 +17,20 @@
 #'
 #' @export
 province_station_files <- function(province = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data", HLY_station_info = NULL) {
+  progressr::handlers(global = TRUE)
+  progressr::handlers("progress")
 
   if(!dir.exists(root_folder))
     dir.create(root_folder, recursive = TRUE)
+
+  # No metadata provided
+  if (is.null(HLY_station_info)) {
+    if (exists("HLY_station_info", envir = .GlobalEnv)) {
+      HLY_station_info <- get("HLY_station_info", envir = .GlobalEnv)
+    } else {
+      stop("HLY_station_info not found. Please run get_metadata() first.")
+    }
+  }
 
   # No station name or id provided
   if (is.null(province) || is.na(province))
@@ -130,6 +141,9 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     }
   }
 
+  progressr::with_progress({
+    p <- progressr::progressor(steps = total_files)
+
   if (total_files > parallel_threshold) {
 
     message("Parallelization threshold met. Using ", 3, " cores to download ", total_files, " files.")
@@ -137,6 +151,8 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     plan(multisession, workers = 3)
 
     future_pwalk(task_list, function(station_name, station_id, month, ...) {
+      p(sprintf("Downloading %s (%d-%02d)", station_name, year, month))
+
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = year,
@@ -151,6 +167,8 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     message(paste("Downloading ", total_files, " files sequentially..."))
 
     pwalk(task_list, function(station_name, station_id, month, ...) {
+      p(sprintf("Downloading %s (%d-%02d)", station_name, year, month))
+
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = year,
@@ -159,4 +177,6 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
                               HLY_station_info = HLY_station_info)
     })
   }
+})
+  message("Download Complete.")
 }

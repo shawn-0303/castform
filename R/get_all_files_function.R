@@ -9,6 +9,17 @@
 #'
 #' @export
 get_all_files <- function(root_folder = "station_data", HLY_station_info = NULL) {
+  progressr::handlers(global = TRUE)
+  progressr::handlers("progress")
+
+  # No metadata provided
+  if (is.null(HLY_station_info)) {
+    if (exists("HLY_station_info", envir = .GlobalEnv)) {
+      HLY_station_info <- get("HLY_station_info", envir = .GlobalEnv)
+    } else {
+      stop("HLY_station_info not found. Please run get_metadata() first.")
+    }
+  }
 
   total_files_overall <- 0
   for (i in seq_len(nrow(HLY_station_info))) {
@@ -19,6 +30,9 @@ get_all_files <- function(root_folder = "station_data", HLY_station_info = NULL)
       total_files_overall <- total_files_overall + ((end_year - begin_year + 1) * 12)
     }
   }
+
+  if (total_files_overall == 0)
+    return(message("No files found to download."))
 
   total_bytes <- total_files_overall * 130000
   est_size_mb <- total_bytes / (1024 ^ 2)
@@ -41,26 +55,33 @@ get_all_files <- function(root_folder = "station_data", HLY_station_info = NULL)
     }
   }
 
-  for (i in seq_len(nrow(HLY_station_info))) {
-    row = HLY_station_info[i,]
-    station_id = row$Station.ID
-    station_name = gsub(" ", "_", row$stationName)
-    province = gsub(" ", "_", row$Province)
-    begin_year = row$HLY.First.Year
-    end_year = row$HLY.Last.Year
+  progressr::with_progress({
+    p <- progressr::progressor(steps = total_files_overall)
+
+    for (i in seq_len(nrow(HLY_station_info))) {
+      row = HLY_station_info[i,]
+      station_id = row$Station.ID
+      station_name = gsub(" ", "_", row$stationName)
+      province = gsub(" ", "_", row$Province)
+      begin_year <- max(1980, row$HLY.First.Year, na.rm = TRUE)
+      end_year <- min(2020, row$HLY.Last.Year, na.rm = TRUE)
 
     # Ensure we only pull data from 1980-2020
-    if (is.na(begin_year) || begin_year  < 1980) begin_year <- 1980
-    if (is.na(end_year) || end_year > 2020) end_year <- 2020
+      if (is.na(begin_year) || begin_year  < 1980) begin_year <- 1980
+      if (is.na(end_year) || end_year > 2020) end_year <- 2020
 
-    if (begin_year > end_year) next
+      if (begin_year > end_year) next
 
     # Create download directory if one doesn't exist
-    station_downloads <- file.path(root_folder, province, paste0(station_name, "_", station_id), begin_year)
-    if (!dir.exists(station_downloads)) dir.create(station_downloads, recursive = TRUE)
+      station_downloads <- file.path(root_folder, province, paste0(station_name, "_", station_id), begin_year)
+      if (!dir.exists(station_downloads)) dir.create(station_downloads, recursive = TRUE)
 
-    for (year in begin_year:end_year) {
-      for (month in 1:12) {
+      for (year in begin_year:end_year) {
+
+        for (month in 1:12) {
+
+          p(message = sprintf("Downloading %s (%d-%02d)", station_name, year, month))
+          if (interactive()) flush.console()
 
         url <- paste0("https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv",
                       "&stationID=", station_id,
@@ -71,7 +92,7 @@ get_all_files <- function(root_folder = "station_data", HLY_station_info = NULL)
         destination <- file.path(station_downloads, paste0(station_name, "_", station_id, "_", year, "_", sprintf("%02d", month), ".csv"))
 
         tryCatch({
-          download.file(url, destination, mode = "wb")
+          download.file(url, destination, mode = "wb", quiet = TRUE)
           # if download fails, return the file that failed and remove the partial file.
         }, error = function(e) {
           if (file.exists(destination)) unlink(destination)
@@ -80,6 +101,7 @@ get_all_files <- function(root_folder = "station_data", HLY_station_info = NULL)
       }
     }
   }
+})
   message("Download Complete.")
 }
 
