@@ -8,7 +8,7 @@ station_lookup(
   province = NULL,
   start_year = NULL,
   end_year = NULL,
-  HLY_station_info = HLY_station_info
+  HLY_station_info = NULL
 )
 }
 \arguments{

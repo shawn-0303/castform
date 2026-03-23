@@ -11,7 +11,7 @@ year_range_station_files(
   end_year = NULL,
   parallel_threshold = 50,
   root_folder = "station_data",
-  HLY_station_info = HLY_station_info
+  HLY_station_info = NULL
 )
 }
 \arguments{

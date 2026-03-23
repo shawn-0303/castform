@@ -12,7 +12,7 @@ get_multiple_station_files(
   month = NULL,
   parallel_threshold = 50,
   root_folder = "station_data",
-  HLY_station_info = HLY_station_info
+  HLY_station_info = NULL
 )
 }
 \arguments{

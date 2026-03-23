@@ -10,7 +10,7 @@ get_single_station_file(
   year = NULL,
   month = NULL,
   root_folder = "station_data",
-  HLY_station_info = HLY_station_info
+  HLY_station_info = NULL
 )
 }
 \arguments{

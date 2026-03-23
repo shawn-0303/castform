@@ -16,7 +16,7 @@
 #' @importFrom utils download.file
 #'
 #' @export
-year_range_station_files <- function(station_name = NULL, station_id = NULL, start_year = NULL, end_year = NULL, parallel_threshold = 50, root_folder = "station_data", HLY_station_info = HLY_station_info) {
+year_range_station_files <- function(station_name = NULL, station_id = NULL, start_year = NULL, end_year = NULL, parallel_threshold = 50, root_folder = "station_data", HLY_station_info = NULL) {
 
   if(!dir.exists(root_folder))
     dir.create(root_folder, recursive = TRUE)
@@ -89,9 +89,21 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
   )
   total_files <- nrow(task_list)
 
+  total_bytes <- total_files * 130000
+  est_size_mb <- total_bytes / (1024 ^ 2)
+  est_size_gb <- total_bytes / (1024 ^ 3)
+
+  estimate_size <- if (est_size_gb >= 1) {
+    paste0(round(est_size_gb, 2), " GB")
+  } else {
+    paste0(round(est_size_mb, 2), " MB")
+  }
+
   if (total_files >= 50) {
     if (interactive()) {
-      msg <- paste("You are about to download ", total_files, " files. Continue to download?")
+      msg <- paste("You are about to download", total_files,
+                   "files which will take up approximately", estimate_size,
+                   ". Continue to download?")
       ans <- utils::askYesNo(msg)
 
       if (!isTRUE(ans)) {
@@ -115,7 +127,8 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder)
+                              root_folder = root_folder,
+                              HLY_station_info = HLY_station_info)
     }, .options = furrr_options(seed = TRUE))
 
     plan(sequential)
@@ -128,7 +141,8 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder)
+                              root_folder = root_folder,
+                              HLY_station_info = HLY_station_info)
     })
   }
 }

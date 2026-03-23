@@ -8,7 +8,7 @@
 #' @importFrom utils download.file
 #'
 #' @export
-get_all_files <- function(root_folder = "station_data", HLY_station_info = HLY_station_info) {
+get_all_files <- function(root_folder = "station_data", HLY_station_info = NULL) {
 
   total_files_overall <- 0
   for (i in seq_len(nrow(HLY_station_info))) {
@@ -20,8 +20,20 @@ get_all_files <- function(root_folder = "station_data", HLY_station_info = HLY_s
     }
   }
 
+  total_bytes <- total_files_overall * 130000
+  est_size_mb <- total_bytes / (1024 ^ 2)
+  est_size_gb <- total_bytes / (1024 ^ 3)
+
+  estimate_size <- if (est_size_gb >= 1) {
+    paste0(round(est_size_gb, 2), " GB")
+  } else {
+    paste0(round(est_size_mb, 2), " MB")
+  }
+
   if (interactive() && total_files_overall > 0) {
-    msg <- paste0("You are about to download up to ", total_files_overall, " hourly files. Continue?")
+    msg <- paste0("You are about to download ", total_files_overall,
+                  " files which will take up approximately ", estimate_size,
+                  " Continue to download?")
     ans <- utils::askYesNo(msg)
     if (!isTRUE(ans)) {
       message("Download cancelled by user.")

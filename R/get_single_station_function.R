@@ -10,7 +10,7 @@
 #' @param HLY_station_info Dataframe: Station metadata
 #'
 #' @export
-get_single_station_file <- function(station_name = NULL, station_id = NULL, year = NULL, month = NULL, root_folder = "station_data", HLY_station_info = HLY_station_info) {
+get_single_station_file <- function(station_name = NULL, station_id = NULL, year = NULL, month = NULL, root_folder = "station_data", HLY_station_info = NULL) {
 
   if(!dir.exists(root_folder))
     dir.create(root_folder, recursive = TRUE)

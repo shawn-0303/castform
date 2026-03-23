@@ -4,10 +4,7 @@
 \alias{get_all_files}
 \title{Get All Hourly Station Files}
 \usage{
-get_all_files(
-  root_folder = "station_data",
-  HLY_station_info = HLY_station_info
-)
+get_all_files(root_folder = "station_data", HLY_station_info = NULL)
 }
 \arguments{
 \item{root_folder}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
