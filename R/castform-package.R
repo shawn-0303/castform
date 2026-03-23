@@ -10,6 +10,7 @@
 #'
 #' @section Main functions:
 #' \itemize{
+#'   \item \code{\link{get_metadata}}: Downloads and loads the latest station inventory metadata (RUN THIS FIRST)
 #'   \item \code{\link{get_single_station_file}}: The primary function to download one hourly data file.
 #'   \item \code{\link{get_multiple_station_files}}: Downloads multiple hourly data files.
 #'   \item \code{\link{province_station_files}}: Downloads data files by province.

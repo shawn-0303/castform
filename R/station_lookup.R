@@ -5,9 +5,10 @@
 #' @param province Character. The Canadian province or territory of interest.
 #' @param start_year Numeric Integer. The start year of the data pull.
 #' @param end_year Numeric Integer. The end year of the data pull
+#' @param HLY_station_info Dataframe: Station metadata
 #'
 #' @export
-station_lookup <- function(province = NULL, start_year = NULL, end_year = NULL) {
+station_lookup <- function(province = NULL, start_year = NULL, end_year = NULL, HLY_station_info = HLY_station_info) {
 
   # No search parameters provided
   if (is.null(province) && is.null(start_year) && is.null(end_year)) {

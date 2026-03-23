@@ -4,10 +4,15 @@
 \alias{get_all_files}
 \title{Get All Hourly Station Files}
 \usage{
-get_all_files(root_folder = "station_data")
+get_all_files(
+  root_folder = "station_data",
+  HLY_station_info = HLY_station_info
+)
 }
 \arguments{
 \item{root_folder}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+
+\item{HLY_station_info}{Dataframe: Station metadata}
 }
 \description{
 Downloads all Environment Canada data from all stations with hourly data available.

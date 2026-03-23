@@ -4,7 +4,12 @@
 \alias{station_lookup}
 \title{Station Look-Up}
 \usage{
-station_lookup(province = NULL, start_year = NULL, end_year = NULL)
+station_lookup(
+  province = NULL,
+  start_year = NULL,
+  end_year = NULL,
+  HLY_station_info = HLY_station_info
+)
 }
 \arguments{
 \item{province}{Character. The Canadian province or territory of interest.}
@@ -12,6 +17,8 @@ station_lookup(province = NULL, start_year = NULL, end_year = NULL)
 \item{start_year}{Numeric Integer. The start year of the data pull.}
 
 \item{end_year}{Numeric Integer. The end year of the data pull}
+
+\item{HLY_station_info}{Dataframe: Station metadata}
 }
 \description{
 Search for Canadian weather stations with hourly data by filtering by province and year range. Users can search through a single parameter or a combination of multiple.

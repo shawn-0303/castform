@@ -9,7 +9,8 @@ province_station_files(
   year = NULL,
   month = NULL,
   parallel_threshold = 50,
-  root_folder = "station_data"
+  root_folder = "station_data",
+  HLY_station_info = HLY_station_info
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ province_station_files(
 \item{parallel_threshold}{Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.}
 
 \item{root_folder}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+
+\item{HLY_station_info}{Dataframe: Station metadata}
 }
 \description{
 Download Environment Canada weather station files by province.

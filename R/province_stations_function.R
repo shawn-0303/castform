@@ -7,6 +7,7 @@
 #' @param month Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to January (1).
 #' @param parallel_threshold Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.
 #' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param HLY_station_info Dataframe: Station metadata
 #'
 #' @importFrom future plan multisession sequential
 #' @importFrom furrr future_pwalk furrr_options
@@ -15,7 +16,7 @@
 #' @importFrom utils download.file
 #'
 #' @export
-province_station_files <- function(province = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data") {
+province_station_files <- function(province = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data", HLY_station_info = HLY_station_info) {
 
   if(!dir.exists(root_folder))
     dir.create(root_folder, recursive = TRUE)
@@ -25,6 +26,19 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     stop("Provide a province or territory")
 
   province = toupper(gsub('"', '', province))
+
+  # If province abbreviation provided
+  province_lookup <- c("AB" = "ALBERTA", "BC" = "BRITISH COLUMBIA", "MB" = "MANITOBA",
+                       "NB" = "NEW BRUNSWICK", "NL" = "NEWFOUNDLAND", "NS" = "NOVA SCOTIA",
+                       "NT" = "NORTHWEST TERRITORIES", "NU" = "NUNAVUT", "ON" = "ONTARIO",
+                       "PE" = "PRINCE EDWARD ISLAND", "QC" = "QUEBEC", "SK" = "SASKATCHEWAN",
+                       "YT" = "YUKON")
+
+  if (province %in% names(province_lookup)) {
+    province <- province_lookup[province]
+  } else {
+    province <- province
+  }
 
   province_subset <- HLY_station_info[HLY_station_info$Province == province, ]
 
