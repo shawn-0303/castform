@@ -3,8 +3,8 @@
 #' Download Environment Canada weather station files by province.
 #'
 #' @param province Character: The province or territory of interest.
-#' @param year Numeric Integer: The year of the data pull. If left empty, will default to the first year for data collection for that particular station.
-#' @param month Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to January (1).
+#' @param year Numeric Integer: The year of the data pull. If left empty, will default to downloading all years with hourly data for that particular station.
+#' @param month Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to downloading data for all months (1-12).
 #' @param parallel_threshold Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.
 #' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #' @param HLY_station_info Dataframe: Station metadata
@@ -61,8 +61,10 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
 
   # No year provided
   if (is.null(year) || is.na(year)) {
-    year <- min(province_subset$HLY.First.Year, na.rm = TRUE)
-    message("No year provided. Defaulting to earliest records: ", year)
+    year_min <- min(province_subset$HLY.First.Year, na.rm = TRUE)
+    year_max <- max(province_subset$HLY.Last.Year, na.rm = TRUE)
+    year <- seq(year_min, year_max)
+    message(sprintf("No year provided. Downloading all available records: %d to %d", year_min, year_max))
   }
 
   # Character year provided
@@ -71,32 +73,27 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     return(NULL)
   }
 
-  # No month provided
   if (is.null(month) || is.na(month)) {
-    message("Invalid or missing month. Defaulting to January (1).")
-    month <- 1
-  }
-
-  # Character month provided
-  month_clean <- tolower(trimws(as.character(month)))
-
-  if (month_clean %in% tolower(month.name)) {
-    month <- match(month_clean, tolower(month.name))
-  } else if (month_clean %in% tolower(month.abb)) {
-    month <- match(month_clean, tolower(month.abb))
-  }
-
-  month <- as.numeric(month)
-
-  # invalid month provided
-  if (is.na(month) || month < 1 || month > 12) {
-    message("Invalid or missing month. Defaulting to January (1).")
-    month <- 1
+    month <- 1:12
+    message("No month provided. Downloading all months (1-12).")
+  } else {
+    # Existing month cleaning logic for single/specific months
+    month_clean <- tolower(trimws(as.character(month)))
+    if (month_clean %in% tolower(month.name)) {
+      month <- match(month_clean, tolower(month.name))
+    } else if (month_clean %in% tolower(month.abb)) {
+      month <- match(month_clean, tolower(month.abb))
+    }
+    month <- as.numeric(month)
+    if (any(is.na(month)) || any(month < 1) || any(month > 12)) {
+      message("Invalid month input. Defaulting to January (1).")
+      month <- 1
+    }
   }
 
   province_matches <- HLY_station_info[HLY_station_info$Province == province &
-                                         HLY_station_info$HLY.First.Year <= year &
-                                         HLY_station_info$HLY.Last.Year >= year, ]
+                                         HLY_station_info$HLY.First.Year <= max(year) &
+                                         HLY_station_info$HLY.Last.Year >= min(year), ]
 
   province_station_count <- nrow(province_matches)
   if (province_station_count == 0) {
@@ -111,6 +108,7 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
 
   task_list <- tidyr::expand_grid(
     stations_to_download,
+    year         = year,
     month        = month
   )
 

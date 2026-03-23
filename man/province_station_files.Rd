@@ -16,9 +16,9 @@ province_station_files(
 \arguments{
 \item{province}{Character: The province or territory of interest.}
 
-\item{year}{Numeric Integer: The year of the data pull. If left empty, will default to the first year for data collection for that particular station.}
+\item{year}{Numeric Integer: The year of the data pull. If left empty, will default to downloading all years with hourly data for that particular station.}
 
-\item{month}{Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to January (1).}
+\item{month}{Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to downloading data for all months (1-12).}
 
 \item{parallel_threshold}{Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.}
 
