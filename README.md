@@ -3,6 +3,7 @@
 
 castform is a package used to download hourly weather station data from Environment Canada. Data is stored as .csv files. There are various functions to:
 
+* Download latest station inventory list
 * Download a single hourly data file 
 * Download multiple hourly data files 
 * Download data files by province/territory
@@ -19,9 +20,17 @@ You can install the development version of castform from [GitHub](https://github
 pak::pak("shawn-0303/castform_package")
 ```
 
+## Loading Metadata
+
+This needs to be the FIRST STEP of your analysis.
+
+Download the latest station inventory list using `get_metadata()`. 
+This function will download the latest station inventory list and store each new version as a .csv and .rda file. 
+Whenever this function is run, it will also load the station list into the global environment as `Hourly_station_info`.
+
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Examples on how to use each code function
 
 ``` r
 library(castform)

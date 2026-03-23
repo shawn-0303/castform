@@ -7,5 +7,5 @@
 get_metadata()
 }
 \description{
-Download the latest station inventory list from Environment Canada. This will download the latest .csv file and load it into your R environment as an .rda file. This needs to be loaded in FIRST to ensure the other functions have data to work with.
+Download the latest station inventory list from Environment Canada. This will download the latest .csv file and needs to be loaded in FIRST to ensure the other functions have data to work with. This will automatically load the latest station inventory into the global environment as `HLY_Station_Info.` If past data file needs to be used, change the `HLY_station_info` parameter within each function.
 }
