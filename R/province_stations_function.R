@@ -155,8 +155,7 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
                               station_id = station_id,
                               year = year,
                               month = month,
-                              root_folder = root_folder,
-                              HLY_station_info = HLY_station_info)
+                              root_folder = root_folder)
     }, .options = furrr_options(seed = TRUE))
 
     plan(sequential)
@@ -171,8 +170,7 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
                               station_id = station_id,
                               year = year,
                               month = month,
-                              root_folder = root_folder,
-                              HLY_station_info = HLY_station_info)
+                              root_folder = root_folder)
     })
   }
 })

@@ -28,9 +28,11 @@ get_metadata <- function() {
 
     HLY_station_info <- station_metadata
     names(HLY_station_info)[names(HLY_station_info) == "Name"] <- "stationName"
+    names(HLY_station_info)[names(HLY_station_info) == "Climate ID"] <- "Climate.ID"
     names(HLY_station_info)[names(HLY_station_info) == "Station ID"] <- "Station.ID"
     names(HLY_station_info)[names(HLY_station_info) == "HLY First Year"] <- "HLY.First.Year"
     names(HLY_station_info)[names(HLY_station_info) == "HLY Last Year"]  <- "HLY.Last.Year"
+    names(HLY_station_info)[names(HLY_station_info) == "Elevation (m)"]  <- "Elevation..m."
 
     HLY_station_info <- HLY_station_info[!is.na(HLY_station_info$HLY.First.Year) &
                                            !is.na(HLY_station_info$HLY.Last.Year), ]

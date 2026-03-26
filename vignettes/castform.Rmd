@@ -212,6 +212,48 @@ province_station_files(province = "prince edward island",
 
 ## Making Databases
 
+`build_station_database()` can be used to create a searchable database with a 
+specified folder of hourly weather station data.
+
+```{r db, eval=FALSE}
+build_station_database <- function(db_name = "BC_station_data") 
+```
+
+If `output_dir` and `root_folder` are left empty, data will be pulled from the 
+package's default data storage folder ("station_data") in the user's working 
+directory and the database will be stored in the same folder. 
+
+Input and output directories can be specified editing these parameters
+
+```{r db2, eval=FALSE}
+build_station_database <- function(db_name = "BC_station_data", 
+                                   output_dir = "castform_outputs", 
+                                   root_folder = "downloaded_data") 
+```
+
+This function builds an database with three tables:
+
+* `Weather`: Stores weather conditions and their associated numeric codes
+* `Station`: Stores weather station information using `HLY_station_info`
+* `Observation`: Stores information from downloaded station data (.csv) files
+
+### Validating Database Creation
+
+After the database is created, users can use `validate_database()`. This will 
+check for the created tables, list the number of observations within each table, 
+and lists the first five observations within the `Observation` table.  
+
+```{r db_val, eval=FALSE}
+validate_database(db_name = "BC_station_data",
+                  db_dir = "castform_outputs")
+```
+
+There should be three tables: `Weather`, `Station`, and `Observation`.
+
+* `Weather` should have 54 records
+* `Station` should have as many records as `HLY_Station_Info`
+* `Observation` should have as many records as stored in the downloaded data files
+
 ## Exploratory Data Analysis 
 
 ## Heat Wave Indicator
