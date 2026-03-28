@@ -5,3 +5,6 @@
 
 docs
 inst/doc
+
+.Rproj
+*.Rproj
