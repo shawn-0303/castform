@@ -166,7 +166,19 @@ From the expected schema, produced tables should have:
 * `Station` As many records as HLY_Station_Info
 * `Observation` As many records as stored in the downloaded data files
 
+## Exploratory Data Analysis
 
+Queries and produces .html outputs to visualize the structure and summary of the data.
+Each table provides buttons for users to copy the output or download a `.csv` or `.pdf`. 
 
+### Data Missingness
 
+Creates a table outlining the expected and actual data counts, along with the percentage of 
+missing data for each variable in each station. 
+
+```r
+data_missingness_table(db_name =  "BC_station_data",
+                       db_dir = "castform_outputs",
+                       output_dir = ""castform_outputs"")
+```
 

@@ -280,6 +280,22 @@ There should be three tables: `Weather`, `Station`, and `Observation`.
 
 ## Exploratory Data Analysis 
 
+After data is downloaded and loaded onto a database, users should always perform 
+exploratory data analyses. castform provides functions to summarize and visualize 
+the data. All outputs are exported as `.html` files, but users can copy the results 
+or download them as `.csv` or `.pdf` files.
+
+### Data Missingness Table 
+
+`data_missingness_table()` creates a table outlining the expected and actual data 
+counts, along with the percentage of missing data for each variable in each station. 
+
+```{r missing, eval=FALSE}
+data_missingness_table(db_name =  "BC_station_data",
+                       db_dir = "castform_outputs",
+                       output_dir = "castform_outputs")
+```
+
 ## Heat Wave Indicator
 
 
