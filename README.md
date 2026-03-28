@@ -92,12 +92,23 @@ get_multiple_station_files(station_name = "discovery island",
                            root_folder = "station_data")
 ```
 
+### Downloading Files by Station
+
+Can specify by `year` and `month`, but if left empty, will download all data available for that station.
+
+``` r                        
+get_station_files(station_name = "discovery island"
+                  station_id = 27226,
+                  parallel_threshold = 50,
+                  root_folder = "station_data")
+```
+
 ### Downloading Files by Province
+
+Can specify by `year` and `month`, but if left empty, will download all data available for that province.
 
 ```r
 province_station_files(province = "prince edward island",
-                       year = 1980,
-                       month = "february",
                        parallel_threshold = 50,
                        root_folder = "station_data")
 ```

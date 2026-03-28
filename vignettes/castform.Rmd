@@ -144,6 +144,31 @@ space required, and ask for user confirmation before the download proceeds.
 If the total number of files exceeds the `parallel_threshold` (default = 50), 
 the download will be parallelized across several cores to speed up the download. 
 
+### Download Files by Station
+
+Here we are downloading all available hourly station data from Discovery Island in British Columbia from October 1999
+
+```{r station, eval=FALSE}
+get_station_files(station_name = "discovery island",
+                  station_id = 27226,
+                  year = 1997,
+                  month = 10,
+                  parallel_threshold = 50,
+                  root_folder = "station_data")
+```
+
+If `year` and `month` are left empty, it will default to all years with available 
+data for that province and for every month (1-12).
+
+This downloads all available hourly station data from Discovery Island 
+
+```{r station2, eval=FALSE}
+get_station_files(station_name = "discovery island",
+                  station_id = 27226,
+                  parallel_threshold = 50,
+                  root_folder = "station_data")
+```
+
 ### Download Files by Province
 
 Here we are downloading all available hourly station data from Prince Edward Island 
@@ -157,11 +182,10 @@ province_station_files(province = "prince edward island",
                        root_folder = "station_data")
 ```
 
-If `year` and `month` are left empty, it will default to all available data for 
-that province and for every month (1-12).
+If `year` and `month` are left empty, it will default to all years with available 
+data for that province and for every month (1-12).
 
-This downloads all available hourly station data from Prince Edward Island from 
-1953 to 2026. 
+This downloads all available hourly station data from Prince Edward Island
 
 ```{r province2, eval=FALSE}
 province_station_files(province = "prince edward island",

@@ -146,31 +146,33 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
 
     message("Parallelization threshold met. Using ", 3, " cores to download ", total_files, " files.")
 
-    plan(multisession, workers = 3)
+    future::plan(future::multisession, workers = 3)
 
-    future_pwalk(task_list, function(station_name, station_id, month, ...) {
+    furrr::future_pwalk(task_list, function(station_name, station_id, year, month, ...) {
       p(sprintf("Downloading %s (%d-%02d)", station_name, year, month))
 
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = year,
                               month = month,
-                              root_folder = root_folder)
+                              root_folder = root_folder,
+                              HLY_station_info = HLY_station_info)
     }, .options = furrr_options(seed = TRUE))
 
-    plan(sequential)
+    future::plan(future::sequential)
 
   } else {
     message(paste("Downloading ", total_files, " files sequentially..."))
 
-    pwalk(task_list, function(station_name, station_id, month, ...) {
+    purrr::pwalk(task_list, function(station_name, station_id, year, month, ...) {
       p(sprintf("Downloading %s (%d-%02d)", station_name, year, month))
 
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = year,
                               month = month,
-                              root_folder = root_folder)
+                              root_folder = root_folder,
+                              HLY_station_info = HLY_station_info)
     })
   }
 })

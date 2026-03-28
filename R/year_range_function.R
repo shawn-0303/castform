@@ -52,7 +52,7 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
     # No station id provided
     if (nrow(match_index) == 0) {
       message("No station matching '", station_name, "'. Check spelling.");
-      return(NULL)
+      return(invisible(NULL))
     }
   }
 
@@ -71,7 +71,7 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
   # Character year provided
   if (is.character(start_year) || is.character(end_year)) {
     message("Invalid input: 'start_year' and `end_year` must be a number.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
   valid_range <- match_index[match_index$HLY.First.Year <= start_year & match_index$HLY.Last.Year >= end_year, ]
@@ -81,13 +81,13 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
     message(paste0("\nNo station matching '", station_name, "' was active between ", start_year, " and ", end_year, "."))
     message(paste("'", station_name, "' has hourly data for the following periods:"))
     print(match_index[, c("stationName", "HLY.First.Year", "HLY.Last.Year")], row.names = FALSE)
-    return(NULL)
+    return(invisible(NULL))
 
     # For stations with the same name
   } else if (nrow(valid_range) > 1) {
     message("\nMultiple stations found. Please provide a Station ID:")
     print(valid_range[, c("stationName", "Station.ID")], row.names = FALSE)
-    return(NULL)
+    return(invisible(NULL))
 
   } else {
     station_id <- valid_range$Station.ID
@@ -143,7 +143,8 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder)
+                              root_folder = root_folder,
+                              HLY_station_info = HLY_station_info)
     }, .options = furrr_options(seed = TRUE))
 
     plan(sequential)
@@ -153,16 +154,15 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
 
     pwalk(task_list, function(yr, mo) {
 
-      # Signal progress
       p(sprintf("Downloading %s (%d-%02d)", station_name, yr, mo))
-      # Force redraw for sequential mode
       if (interactive()) flush.console()
 
       get_single_station_file(station_name = station_name,
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder)
+                              root_folder = root_folder,
+                              HLY_station_info = HLY_station_info)
     })
   }
 })

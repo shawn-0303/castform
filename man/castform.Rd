@@ -6,6 +6,8 @@
 \alias{castform}
 \title{castform: Download Environment Canada Weather Station Data}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Downloads hourly weather station data (as csv files) from Environment Canada.
 }
 \section{Main functions}{

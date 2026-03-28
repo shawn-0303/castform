@@ -41,7 +41,7 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
   if (is.null(station_name) || any(is.na(station_name))) {
     station_matches <- HLY_station_info[HLY_station_info$Station.ID == station_id, ]
     if (nrow(station_matches) == 0) {
-      message("Station ID ", station_id, " not found."); return(NULL)
+      message("Station ID ", station_id, " not found."); return(invisible(NULL))
     }
     station_name <- station_matches$stationName[1]
 
@@ -52,7 +52,7 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     # No station id provided
     if (nrow(station_matches) == 0) {
       message("No station matching '", station_name, "'. Check spelling.");
-      return(NULL)
+      return(invisible(NULL))
     }
   }
 
@@ -65,7 +65,7 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
   # Character year provided
   if (is.character(year)) {
     message("Invalid input: 'year' must be a number.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
   # No month provided
@@ -104,13 +104,13 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
     message(paste0("\nNo station matching '", station_name, "' was active in ", year, "."))
     message(paste("'", station_name, "' has hourly data for the following periods:"))
     print(station_matches[, c("stationName", "HLY.First.Year", "HLY.Last.Year")], row.names = FALSE)
-    return(NULL)
+    return(invisible(NULL))
 
     # For stations with the same name
   } else if (nrow(valid_matches) > 1) {
     message("\nMultiple stations found. Please provide a Station ID:")
     print(valid_matches[, c("stationName", "Station.ID")], row.names = FALSE)
-    return(NULL)
+    return(invisible(NULL))
 
   } else {
     station_id <- valid_matches$Station.ID
@@ -154,9 +154,9 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
 
     message(paste("Parallelization threshold met. Using ", 3, " cores to download ", number_of_files, "files"))
 
-    plan(multisession, workers = 3)
+    future::plan(future::multisession, workers = 3)
 
-    future_pwalk(task_list, function(yr, mo, ...) {
+    furrr::future_pwalk(task_list, function(yr, mo, ...) {
       p(sprintf("Downloading %s (%d-%02d)", station_name, yr, mo))
 
       get_single_station_file(station_name = station_name,
@@ -166,12 +166,12 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
                               root_folder = root_folder)
     }, .options = furrr_options(seed = TRUE))
 
-    plan(sequential)
+    future::plan(future::sequential)
 
   } else {
     message(paste("Downloading ", number_of_files, " files sequentially."))
 
-    pwalk(task_list, function(yr, mo, ...) {
+    purrr::pwalk(task_list, function(yr, mo, ...) {
       p(sprintf("Downloading %s (%d-%02d)", station_name, yr, mo))
 
       get_single_station_file(station_name = station_name,

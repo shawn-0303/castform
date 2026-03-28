@@ -9,7 +9,7 @@ validate_database(db_name = NULL, db_dir = "station_data")
 \arguments{
 \item{db_name}{Character: The name of the database}
 
-\item{db_dir}{The directory of the database, If left unchanged, will default to "station_data".}
+\item{db_dir}{The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
 }
 \description{
 Used to validate databases created by `build_station_database`. This function will check for tables created within the database, count the number of records within each table, and print the first five observation records.

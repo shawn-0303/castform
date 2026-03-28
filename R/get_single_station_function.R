@@ -32,7 +32,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
     station_matches <- HLY_station_info[HLY_station_info$Station.ID == station_id, ]
     if (nrow(station_matches) == 0) {
       message("Station ID ", station_id, " not found.");
-      return(NULL)
+      return(invisible(NULL))
     }
     station_name <- station_matches$stationName[1]
 
@@ -43,7 +43,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
     # No station id provided
     if (nrow(station_matches) == 0) {
       message("No station matching '", station_name, "'. Check spelling.");
-      return(NULL)
+      return(invisible(NULL))
     }
   }
 
@@ -56,7 +56,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
   # Character year provided
   if (is.character(year)) {
     message("Invalid input: 'year' must be a number.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
   # No month provided
@@ -83,17 +83,18 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
   }
 
   # Filter by year activity
-  valid_matches <- station_matches[station_matches$HLY.First.Year <= year & station_matches$HLY.Last.Year >= year, ]
+  valid_matches <- station_matches[station_matches$HLY.First.Year <= year &
+                                     station_matches$HLY.Last.Year >= year, ]
 
   if (nrow(valid_matches) == 0) {
     message("\nNo station matching '", station_name, "' was active in ", year, ".")
     print(station_matches[, c("stationName", "HLY.First.Year", "HLY.Last.Year")], row.names = FALSE)
-    return(NULL)
+    return(invisible(NULL))
 
   } else if (nrow(valid_matches) > 1 && is.null(station_id)) {
     message("\nMultiple stations found. Please provide a Station ID:")
     print(valid_matches[, c("stationName", "Station.ID", "HLY.First.Year", "HLY.Last.Year")], row.names = FALSE)
-    return(NULL)
+    return(invisible(NULL))
   }
 
   # Finalize station ID
@@ -130,7 +131,6 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
     return(FALSE)
   })
 }
-
 
 
 
