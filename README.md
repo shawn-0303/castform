@@ -218,9 +218,8 @@ pull_missing_strings(db_name =  "BC_station_data",
 ### Repeated Strings
 
 Creates a table identifying strings of repeated values that occur for three hours 
-or more. This can indicate faulty machinery in data collection. The table stores 
-the length (in hours) and start and end date/time of the repeated strings. Also 
-creates a plot to visualize these strings.
+or more. The table stores the length (in hours) and start and end date/time of 
+the repeated strings. Also creates a plot to visualize these strings.
 
 **NOTE:** This will take longer to run on larger datasets. Large datasets will also 
 require zooming into plots to see outputs or else the plot will look empty. 
