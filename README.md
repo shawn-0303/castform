@@ -1,7 +1,7 @@
 
 # castform
 
-<img src="man/figures/castform_logo.png" align="right" width="140" alt="castform hex sticker" />
+<img src="man/figures/castform_logo.png" align="right" width="140" alt="castform hex sticker" style="border: none; box-shadow: none;"/>
 
 castform is a package used to download historic hourly weather station data from Environment Canada. This data is downloaded from:
 

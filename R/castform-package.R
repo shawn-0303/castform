@@ -22,6 +22,7 @@
 #'   \item \code{\link{validate_database}}: Validates created database
 #'   \item \code{\link{data_missingness_table}}: Creates a table summarizing actual, expected, and missing data counts
 #'   \item \code{\link{data_ranges}}: Creates a table summarizing variable data ranges
+#'   }
 #'
 #' @name castform
 #'

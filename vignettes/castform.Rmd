@@ -20,9 +20,13 @@ knitr::opts_chunk$set(
 
 ## Overview
 
+<img src="../man/figures/castform_logo.png" align="right" width="140" alt="castform hex sticker" style="border: none; box-shadow: none;"/>
+
 This document is an introduction to the castform package. It has everything you 
 need to download and analyze historical climate data from the Department of 
 Environment and Climate Change Canada (ECCC). 
+
+https://climate.weather.gc.ca/historical_data/search_historic_data_e.html 
 
 When doing weather station analyses you need to:
 
@@ -32,6 +36,8 @@ When doing weather station analyses you need to:
 * Print user friendly outputs
 
 The castform package provides you with functions for a complete analysis. 
+
+<br clear="right"/>
 
 ```{r setup}
 library(castform)

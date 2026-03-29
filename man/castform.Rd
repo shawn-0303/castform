@@ -22,7 +22,10 @@ Downloads hourly weather station data (as csv files) from Environment Canada.
   \item \code{\link{year_range_station_files}}: Downloads data files by year range.
   \item \code{\link{get_all_files}}: Downloads all data files with hourly data available.
   \item \code{\link{build_station_database}}: Creates a database using a folder of specified weather station data
-}
+  \item \code{\link{validate_database}}: Validates created database
+  \item \code{\link{data_missingness_table}}: Creates a table summarizing actual, expected, and missing data counts
+  \item \code{\link{data_ranges}}: Creates a table summarizing variable data ranges
+  }
 }
 
 \author{
