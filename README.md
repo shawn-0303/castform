@@ -140,7 +140,7 @@ in the user’s working directory and the database will be stored in the same fo
 ```r
 build_station_database <- function(db_name = "BC_station_data", 
                                    output_dir = "castform_outputs", 
-                                   root_folder = "downloaded_data") 
+                                   root_folder = "downloaded_data/BC") 
 ```
 
 This builds a database with the expected scheme:
@@ -179,7 +179,7 @@ missing data for each variable in each station.
 ```r
 data_missingness_table(db_name =  "BC_station_data",
                        db_dir = "castform_outputs",
-                       output_dir = ""castform_outputs"")
+                       output_dir = "castform_outputs")
 ```
 
 ### Data Ranges
@@ -190,5 +190,16 @@ in each station.
 ```r
 data_ranges(db_name =  "BC_station_data",
             db_dir = "castform_outputs",
-            output_dir = ""castform_outputs"")
+            output_dir = "castform_outputs")
+```
+
+### Yearly Means
+
+Create plots that summarize the means of every variable over time (where station data 
+is available)
+
+```r
+plot_yearly_means(db_name =  "BC_station_data",
+                  db_dir = "castform_outputs",
+                  output_dir = "castform_outputs")
 ```

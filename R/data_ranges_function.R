@@ -1,6 +1,16 @@
+#' Data Ranges Table
+#'
+#' Creates a `.html` output table with data ranges from each station within a database. Stores the average, minimum, and maximum values for each variable.
+#'
+#' @param db_name Character: The name of the database
+#' @param db_dir The directory of the database, If left unchanged, will default to package's default created directory "station_data".
+#' @param output_dir The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#'
+#' @export
 data_ranges <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data") {
+  db_name_clean <- gsub(" ", "_", toupper(db_name))
 
-  db_path <- file.path(db_dir, paste0(db_name, ".sqlite"))
+  db_path <- file.path(db_dir, paste0(db_name_clean, ".sqlite"))
 
   if (file.exists(db_path)) {
     con <- DBI::dbConnect(RSQLite::SQLite(), dbname = db_path)
@@ -43,19 +53,21 @@ data_ranges <- function(db_name = NULL, db_dir = "station_data", output_dir = "s
                     `Minimum Value` = min,
                     `Maximum Value` = max)
 
+    table_title_name <- gsub("_", " ", toupper(db_name_clean))
+
     data_range_table <- DT::datatable(data_range_long,
                                        caption = htmltools::tags$caption(style = 'caption-side: top; text-align: center; color:black; font-size:250%;',
-                                                                         paste0(db_name, " Data Ranges")),
+                                                                         paste0(table_title_name, " Data Ranges")),
                                        filter = list(position = 'top', clear = FALSE, plain = TRUE),
                                        rownames = FALSE,
                                        extensions = 'Buttons',
                                        options = list(pageLength = 10,
                                                       dom = 'Bfrtip',
-                                                      buttons = list(list(extend = 'copy', title = paste0(db_name, "_Data_Ranges")),
-                                                                     list(extend = 'csv', title = paste0(db_name, "_Data_Ranges")),
-                                                                     list(extend = 'pdf', title = paste0(db_name, "_Data_Ranges")))))
+                                                      buttons = list(list(extend = 'copy', title = paste0(db_name_clean, "_Data_Ranges")),
+                                                                     list(extend = 'csv', title = paste0(db_name_clean, "_Data_Ranges")),
+                                                                     list(extend = 'pdf', title = paste0(db_name_clean, "_Data_Ranges")))))
 
-    output_file <- file.path(getwd(), output_dir, paste0(db_name, "_data_range_table.html"))
+    output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_data_range_table.html"))
 
     tmp_dir <- tempdir()
     tmp_file <- file.path(tmp_dir, "temp_table.html")

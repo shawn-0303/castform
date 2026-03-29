@@ -1,5 +1,9 @@
 #' @keywords internal
 #'
+#' @description
+#'  Downloads hourly weather station data (as csv files) from Environment Canada.
+#'  This data is downloaded from: https://climate.weather.gc.ca/historical_data/search_historic_data_e.html
+#'
 #' @importFrom purrr pwalk
 #' @importFrom furrr furrr_options
 #' @importFrom furrr future_pwalk

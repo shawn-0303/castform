@@ -24,8 +24,10 @@ build_station_database <- function(db_name = NULL, HLY_station_info = NULL, outp
   if (is.null(db_name) || is.na(db_name))
     stop("Please provided a database name")
 
+  db_name_clean <- gsub(" ", "_", toupper(db_name))
+
   if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
-  db_path <- file.path(output_dir, paste0(db_name, ".sqlite"))
+  db_path <- file.path(output_dir, paste0(db_name_clean, ".sqlite"))
   if (file.exists(db_path)) file.remove(db_path)
 
   con <- DBI::dbConnect(RSQLite::SQLite(), dbname = db_path)
@@ -179,7 +181,7 @@ build_station_database <- function(db_name = NULL, HLY_station_info = NULL, outp
       p()
     })
   })
-  message(paste0("Database build complete. Data stored in ", paste0(db_name, ".sqlite")))
+  message(paste0("Database build complete. Data stored in ", paste0(db_name_clean, ".sqlite")))
 }
 
 

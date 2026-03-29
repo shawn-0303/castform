@@ -177,6 +177,8 @@ get_station_files(station_name = "discovery island",
 
 ### Download Files by Province
 
+Province and territory can be input as full or abbreviated names. 
+
 Here we are downloading all available hourly station data from Prince Edward Island 
 from February 1980
 
@@ -245,8 +247,11 @@ province_station_files(province = "prince edward island",
 `build_station_database()` can be used to create a searchable database with a 
 specified folder of hourly weather station data.
 
+Input database names will automatically have spaces replaced with underscores and 
+be turned to uppercase.
+
 ```{r db, eval=FALSE}
-build_station_database <- function(db_name = "BC_station_data") 
+build_station_database <- function(db_name = "BC station data") 
 ```
 
 If `output_dir` and `root_folder` are left empty, data will be pulled from the 
@@ -256,9 +261,9 @@ directory and the database will be stored in the same folder.
 Input and output directories can be specified editing these parameters
 
 ```{r db2, eval=FALSE}
-build_station_database <- function(db_name = "BC_station_data", 
+build_station_database <- function(db_name = "BC_STATION_DATA", 
                                    output_dir = "castform_outputs", 
-                                   root_folder = "downloaded_data") 
+                                   root_folder = "downloaded_data/British_Columbia") 
 ```
 
 This function builds an database with three tables:
@@ -274,7 +279,7 @@ check for the created tables, list the number of observations within each table,
 and lists the first five observations within the `Observation` table.  
 
 ```{r db_val, eval=FALSE}
-validate_database(db_name = "BC_station_data",
+validate_database(db_name = "BC_STATION_DATA",
                   db_dir = "castform_outputs")
 ```
 
@@ -291,15 +296,22 @@ exploratory data analyses. castform provides functions to summarize and visualiz
 the data. All outputs are exported as `.html` files, but users can copy the results 
 or download them as `.csv` or `.pdf` files.
 
+Input database names will automatically have spaces replaced with underscores and 
+be turned to uppercase.
+
+Every EDA function has the same three parameters:
+
+* `db_name` =  The name of the database
+* `db_dir` =  The directory where the database is stored ("station_data" as default)
+* `output_dir` = The directory where produced outputs will be stored ("station_data" as default)
+
 ### Data Missingness Table 
 
 `data_missingness_table()` creates a table outlining the expected and actual data 
 counts, along with the percentage of missing data for each variable in each station. 
 
 ```{r ranges, eval=FALSE}
-data_missingness_table(db_name =  "BC_station_data",
-                       db_dir = "castform_outputs",
-                       output_dir = "castform_outputs")
+data_missingness_table(db_name =  "BC_STATION_DATA")
 ```
 
 ### Data Range Table
@@ -308,9 +320,16 @@ data_missingness_table(db_name =  "BC_station_data",
 for each variable in each station. 
 
 ```{r missing, eval=FALSE}
-data_ranges(db_name =  "BC_station_data",
-            db_dir = "castform_outputs",
-            output_dir = ""castform_outputs"")
+data_ranges(db_name =  "BC_STATION_DATA")
+```
+
+### Yearly Means Plots
+
+`plot_yearly_means()` creates plots outlining the values for each variable over time 
+for every year the station is active. 
+
+```{r yearly_mean, eval=FALSE}
+plot_yearly_means(db_name =  "BC_STATION_DATA")
 ```
 
 ## Heat Wave Indicator

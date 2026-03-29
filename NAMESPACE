@@ -2,6 +2,7 @@
 
 export(build_station_database)
 export(data_missingness_table)
+export(data_ranges)
 export(get_all_files)
 export(get_metadata)
 export(get_multiple_station_files)
