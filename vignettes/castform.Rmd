@@ -332,6 +332,16 @@ for every year the station is active.
 plot_yearly_means(db_name =  "BC_STATION_DATA")
 ```
 
+### Identify Data Gaps
+
+`pull_missing_strings()` identifies gaps or missing strings of data. It creates a 
+table to identify when data is missing and stores the length (in hours), as well as 
+the start and end date/time for each gap.
+
+```{r missing_strings, eval=FALSE}
+pull_missing_strings(db_name =  "BC_STATION_DATA")
+```
+
 ## Heat Wave Indicator
 
 
