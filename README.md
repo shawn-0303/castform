@@ -182,3 +182,13 @@ data_missingness_table(db_name =  "BC_station_data",
                        output_dir = ""castform_outputs"")
 ```
 
+### Data Ranges
+
+Creates a table summarizing the average, minimum and maximum value of each variable 
+in each station.
+
+```r
+data_ranges(db_name =  "BC_station_data",
+            db_dir = "castform_outputs",
+            output_dir = ""castform_outputs"")
+```

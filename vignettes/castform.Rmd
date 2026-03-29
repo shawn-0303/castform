@@ -290,10 +290,21 @@ or download them as `.csv` or `.pdf` files.
 `data_missingness_table()` creates a table outlining the expected and actual data 
 counts, along with the percentage of missing data for each variable in each station. 
 
-```{r missing, eval=FALSE}
+```{r ranges, eval=FALSE}
 data_missingness_table(db_name =  "BC_station_data",
                        db_dir = "castform_outputs",
                        output_dir = "castform_outputs")
+```
+
+### Data Range Table
+
+`data_ranges()` creates a table outlining the average, minimum, and maximum values 
+for each variable in each station. 
+
+```{r missing, eval=FALSE}
+data_ranges(db_name =  "BC_station_data",
+            db_dir = "castform_outputs",
+            output_dir = ""castform_outputs"")
 ```
 
 ## Heat Wave Indicator
