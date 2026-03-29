@@ -207,7 +207,7 @@ plot_yearly_means(db_name =  "BC_station_data",
 ### Missing Strings
 
 Creates a table identifying when data is missing. Stores the length (in hours) and
-start and end date/time of the data gap
+start and end date/time of the data gap. Also creates a plot to visualize these gaps.
 
 ```r
 pull_missing_strings(db_name =  "BC_station_data",
@@ -215,6 +215,18 @@ pull_missing_strings(db_name =  "BC_station_data",
                      output_dir = "castform_outputs")
 ```
 
+### Repeated Strings
 
+Creates a table identifying strings of repeated values that occur for three hours 
+or more. This can indicate faulty machinery in data collection. The table stores 
+the length (in hours) and start and end date/time of the repeated strings. Also 
+creates a plot to visualize these strings.
 
+**NOTE:** This will take longer to run on larger datasets. Large datasets will also 
+require zooming into plots to see outputs or else the plot will look empty. 
 
+```r
+pull_repeated_strings(db_name =  "BC_station_data",
+                     db_dir = "castform_outputs",
+                     output_dir = "castform_outputs")
+```

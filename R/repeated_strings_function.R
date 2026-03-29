@@ -1,13 +1,13 @@
-#' Pull Strings of Missing Data
+#' Pull Strings of Repeated Data
 #'
-#' Creates a `.html` output table and plot to identify when data is missing from the database. Stores the length of the data gap (in hours) as well as the start and end date/time.
+#' Creates a `.html` output table and plot identifying when data values are repeated at least three times in a row. Stores the length of the repeat (in hours) as well as the start and end date/time. Large amounts of data mayt take longer to load and require users to zoom into the plot to see points.
 #'
 #' @param db_name Character: The name of the database
 #' @param db_dir The directory of the database, If left unchanged, will default to package's default created directory "station_data".
 #' @param output_dir The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #'
 #' @export
-pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data") {
+pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data") {
   db_name_clean <- gsub(" ", "_", toupper(db_name))
 
   db_path <- file.path(db_dir, paste0(db_name_clean, ".sqlite"))
@@ -33,7 +33,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     message("Querying data ranges...")
     query_results <- DBI::dbGetQuery(con, query_script)
 
-    message("Finding missing strings...")
+    message("Finding repeated strings...")
     data_range_long <- query_results |>
       dplyr::left_join(stations_in_database, by = c("Station_ID")) |>
       tidyr::pivot_longer(cols = vars,
@@ -41,34 +41,44 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
                           values_to = "Value") |>
       dplyr::mutate(Station_Name = as.factor(Station_Name),
                     Variable = as.factor(Variable)) |>
-      dplyr::filter(is.na(Value)) |>
+      dplyr::filter(!is.na(Value)) |>
       dplyr::group_by(Station_ID, Variable) |>
       dplyr::mutate(time_val = lubridate::ymd_hm(paste(Year, Month, Day, Time_LST)),
-                    diff = as.numeric(difftime(time_val, dplyr::lag(time_val), units = "hours")),
-                    new_streak = dplyr::if_else(is.na(diff) | diff > 1, 1, 0),
+                    val_change = Value != dplyr::lag(Value),
+                    time_diff = as.numeric(difftime(time_val, dplyr::lag(time_val), units = "hours")) > 1,
+                    new_streak = dplyr::if_else(is.na(val_change) | val_change | time_diff, 1, 0),
                     streak_id = cumsum(new_streak)) |>
-      dplyr::group_by(Station_Name, Station_ID, Variable, streak_id) |>
-      dplyr::summarise("Streak Length (Hours)" =  dplyr::n(),
-                      "Streak Start Time" = min(time_val),
-                      "Streak End Time" = max(time_val),
-                      .groups = "drop") |>
-      dplyr::select(-streak_id)
+      dplyr::group_by(Station_Name, Station_ID, Variable, Value, streak_id) |>
+      dplyr::summarise(Streak_Length_Hours  =  dplyr::n(),
+                       Start_Time  = min(time_val),
+                       End_Time = max(time_val),
+                       .groups = "drop") |>
+      dplyr::filter(Streak_Length_Hours >= 3) |>
+      dplyr::select("Station Name" = Station_Name,
+                    "Station ID" = Station_ID,
+                    Variable,
+                    "Repeated Value" = Value,
+                    "Streak Length (Hours)" = Streak_Length_Hours,
+                    "Streak Start Time" = Start_Time,
+                    "Streak End Time" = End_Time)
 
+
+    message("Formatting table...")
     table_title_name <- gsub("_", " ", toupper(db_name_clean))
 
     data_range_table <- DT::datatable(data_range_long,
                                       caption = htmltools::tags$caption(style = 'caption-side: top; text-align: center; color:black; font-size:250%;',
-                                                                        paste0(table_title_name, " Missing Strings")),
+                                                                        paste0(table_title_name, " Repeated Strings")),
                                       filter = list(position = 'top', clear = FALSE, plain = TRUE),
                                       rownames = FALSE,
                                       extensions = 'Buttons',
                                       options = list(pageLength = 10,
                                                      dom = 'Bfrtip',
-                                                     buttons = list(list(extend = 'copy', title = paste0(db_name_clean, "_missing_strings")),
-                                                                    list(extend = 'csv', title = paste0(db_name_clean, "_missing_strings")),
-                                                                    list(extend = 'pdf', title = paste0(db_name_clean, "_missing_strings")))))
+                                                     buttons = list(list(extend = 'copy', title = paste0(db_name_clean, "_repeated_strings")),
+                                                                    list(extend = 'csv', title = paste0(db_name_clean, "_repeated_strings")),
+                                                                    list(extend = 'pdf', title = paste0(db_name_clean, "_repeated_strings")))))
 
-    table_output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_missing_strings_table.html"))
+    table_output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_repeated_strings_table.html"))
 
     tmp_dir <- tempdir()
     tmp_file <- file.path(tmp_dir, "temp_table.html")
@@ -81,7 +91,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     dep_dir <- gsub("\\.html$", "_files", table_output_file)
     if (dir.exists(dep_dir)) unlink(dep_dir, recursive = TRUE)
 
-    message("Missing strings table saved to: ", table_output_file)
+    message("Repeated strings table saved to: ", table_output_file)
 
     message("Formatting plot...")
 
@@ -91,7 +101,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
       id = "station_selector",
       label = "Select Station:",
       sharedData = shared_data,
-      group = ~Station_Name
+      group = ~`Station Name`
     )
 
     # Gantt-style plot
@@ -99,13 +109,13 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
       plotly::add_segments(
         x = ~`Streak Start Time`,
         xend = ~`Streak End Time`,
-        y = ~paste(Station_Name, Variable),
-        yend = ~paste(Station_Name, Variable),
+        y = ~paste(`Station Name`, Variable),
+        yend = ~paste(`Station Name`, Variable),
         color = ~Variable,
         line = list(width = 15)
       ) %>%
       plotly::layout(
-        title = "Missing String Timeline",
+        title = "Repeated String Timeline",
         xaxis = list(title = "Date"),
         yaxis = list(title = ""),
         margin = list(l = 150)
@@ -117,7 +127,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
       interactive_plot
     )
 
-    plot_output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_missing_strings_plot.html"))
+    plot_output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_repeated_strings_plot.html"))
 
     message("Saving HTML plot...")
 
@@ -126,6 +136,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     htmltools::save_html(final_content, file = plot_output_file)
 
     message("Repeated strings plot saved to: ", plot_output_file)
+
   } else {
     message("Database not found. Please double check the entered database name, the database directory, and ensure the build_station_database function finished successfully.")
   }

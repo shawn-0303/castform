@@ -336,11 +336,27 @@ plot_yearly_means(db_name =  "BC_STATION_DATA")
 
 `pull_missing_strings()` identifies gaps or missing strings of data. It creates a 
 table to identify when data is missing and stores the length (in hours), as well as 
-the start and end date/time for each gap.
+the start and end date/time for each gap. It will also create an interactive plot 
+to visualize these gaps 
 
 ```{r missing_strings, eval=FALSE}
 pull_missing_strings(db_name =  "BC_STATION_DATA")
 ```
+
+### Identify Repeated Strings
+
+Hours of repeated data values can indicate faulty machinery during data collection. 
+`pull_repeated_strings()` identifies strings of repeated values that occur for three 
+hours or more. This can indicate faulty machinery in data collection. The table 
+stores the length (in hours) and start and end date/time of the repeated strings. 
+It will also create an interactive plot to visualize these strings. 
+
+```{r missing_strings, eval=FALSE}
+pull_repeated_strings(db_name =  "BC_STATION_DATA")
+```
+
+**NOTE:** This will take longer to run on larger datasets. Large datasets will also 
+require zooming into plots to see outputs or else the plot will look empty. 
 
 ## Heat Wave Indicator
 

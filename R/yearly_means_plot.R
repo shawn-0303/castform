@@ -54,64 +54,39 @@ plot_yearly_means <- function(db_name = NULL, db_dir = "station_data", output_di
 
     message("Building plot...")
 
-    plot_base <- plotly::plot_ly(yearly_means_long,
-                                 x = ~Year,
-                                 y = ~Average,
-                                 color = ~Variable,
-                                 split = ~Station_ID,
-                                 name = ~Variable,
-                                 customdata = ~Station_ID,
-                                 type = 'scatter',
-                                 mode = 'lines+markers',
-                                 connectgaps = FALSE)
+    shared_data <- crosstalk::SharedData$new(yearly_means_long)
 
-    built_plot <- plotly::plotly_build(plot_base)
-    all_traces <- built_plot$x$data
-    trace_ids <- sapply(all_traces, function(x) x$customdata[1])
+    station_filter <- crosstalk::filter_select(
+      id = "station_selector",
+      label = "Choose a Station:",
+      sharedData = shared_data,
+      group = ~Station_Name
+    )
 
-    stn_lookup <- yearly_means %>%
-      dplyr::distinct(Station_ID, Station_Name) %>%
-      dplyr::mutate(Station_ID = as.character(Station_ID))
-
-    buttons <- lapply(1:nrow(stn_lookup), function(i) {
-      id <- stn_lookup$Station_ID[i]
-      nm <- stn_lookup$Station_Name[i]
-      vis_vector <- trace_ids == id
-
-      list(method = "update",
-           args = list(list(visible = vis_vector),
-                       list(title = list(text = paste("Yearly Weather Averages:", nm, " (Station ID: ", id, ")")))),
-           label = nm)
-    })
-
-    year_limits <- range(yearly_means_long$Year, na.rm = TRUE)
-
-    # Update the plot
-    plot <- plot_base |>
-      plotly::layout(xaxis = list(
-        title = "Year",
-        range = year_limits,
-        tickformat =  "d",
-        dtick = 1),
-        updatemenus = list(
-          list(buttons = buttons,
-               direction = "down",
-               showactive = TRUE))) |>
-      plotly::style(visible = (trace_ids == stn_lookup$Station_ID[1])) |>
+    interactive_plot <- plotly::plot_ly(shared_data,
+                                        x = ~Year,
+                                        y = ~Average,
+                                        color = ~Variable,
+                                        type = 'scatter',
+                                        mode = 'lines+markers',
+                                        connectgaps = FALSE) |>
+      plotly::layout(
+        title = list(text = paste(gsub("_", " ", db_name_clean), "Yearly Averages")),
+        xaxis = list(title = "Year", tickformat = "d", dtick = 1),
+        yaxis = list(title = "Average Value"),
+        hovermode = "closest"
+      ) |>
       plotly::toWebGL()
+
+    final_html <- htmltools::tagList(
+      htmltools::div(style = "margin-bottom: 20px;", station_filter),
+      interactive_plot
+    )
 
     output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_yearly_means_plot.html"))
 
-    tmp_dir <- tempdir()
-    tmp_file <- file.path(tmp_dir, "temp_table.html")
-
-    message("Saving self-contained HTML table...")
-    htmlwidgets::saveWidget(plot, file = tmp_file, selfcontained = TRUE)
-
-    file.copy(tmp_file, output_file, overwrite = TRUE)
-
-    dep_dir <- gsub("\\.html$", "_files", output_file)
-    if (dir.exists(dep_dir)) unlink(dep_dir, recursive = TRUE)
+    message("Saving HTML plot...")
+    htmltools::save_html(final_html, file = output_file)
 
     message("Yearly means plot saved to: ", output_file)
   } else {
