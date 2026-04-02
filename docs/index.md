@@ -1,0 +1,73 @@
+# castform
+
+castform is a package used to download hourly weather station data from
+Environment Canada. Data is stored as .csv files. There are various
+functions to:
+
+- Download latest station inventory list
+- Download a single hourly data file
+- Download multiple hourly data files
+- Download data files by province/territory
+- Download data files by year range
+- Download all available hourly station files
+- Search for available stations by province and year range
+
+## Installation
+
+You can install the development version of castform from
+[GitHub](https://github.com/shawn-0303/castform) with:
+
+``` r
+# install.packages("pak")
+pak::pak("shawn-0303/castform_package")
+```
+
+## Loading Metadata
+
+This needs to be the FIRST STEP of your analysis.
+
+Download the latest station inventory list using
+[`get_metadata()`](reference/get_metadata.md). This function will
+download the latest station inventory list and store each new version as
+a .csv and .rda file. Whenever this function is run, it will also load
+the station list into the global environment as `Hourly_station_info`.
+
+## Example
+
+Examples on how to use each code function
+
+``` r
+library(castform)
+get_single_station_file(station_name =  "discovery island",
+                        station_id = 27226,
+                        year = 1997,
+                        month = 1,
+                        root_folder = "station_data")
+                        
+get_multiple_station_files(station_name = "discovery island",
+                           station_id = 27226,
+                           number_of_files = 10,
+                           year = 1997,
+                           month = 1,
+                           parallel_threshold = 50,
+                           root_folder = "station_data")
+                           
+province_station_files(province = "prince edward island",
+                       year = 1980,
+                       month = "february",
+                       parallel_threshold = 50,
+                       root_folder = "station_data")
+                       
+year_range_station_files(station_name = "discovery island",
+                         station_id = 27226,
+                         start_year = 1997,
+                         end_year = 1999,
+                         parallel_threshold = 50,
+                         root_folder = "station_data")
+                         
+get_all_files()
+
+station_lookup(province = "prince edward island", 
+               start_year = 1980, 
+               end_year = 2020)
+```

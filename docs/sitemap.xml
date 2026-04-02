@@ -1,0 +1,15 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/castform.html</loc></url>
+<url><loc>/reference/get_all_files.html</loc></url>
+<url><loc>/reference/get_metadata.html</loc></url>
+<url><loc>/reference/get_multiple_station_files.html</loc></url>
+<url><loc>/reference/get_single_station_file.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/province_station_files.html</loc></url>
+<url><loc>/reference/station_lookup.html</loc></url>
+<url><loc>/reference/year_range_station_files.html</loc></url>
+</urlset>
+
