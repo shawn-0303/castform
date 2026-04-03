@@ -31,3 +31,4 @@ Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)
 VignetteBuilder: knitr
+URL: https://shawn-0303.github.io/castform/

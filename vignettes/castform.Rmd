@@ -351,7 +351,7 @@ hours or more. This can indicate faulty machinery in data collection. The table
 stores the length (in hours) and start and end date/time of the repeated strings. 
 It will also create an interactive plot to visualize these strings. 
 
-```{r missing_strings, eval=FALSE}
+```{r repeated_strings2, eval=FALSE}
 pull_repeated_strings(db_name =  "BC_STATION_DATA")
 ```
 
@@ -360,6 +360,25 @@ require zooming into plots to see outputs or else the plot will look empty.
 
 ## Heat Wave Indicator
 
+After verifying the data, you can now perform an analysis to detect extreme weather 
+events. `heatwave_detector()` allows for the detection of extreme heat events 
+using user input temperature thresholds (in Celcius).
+
+This function uses ECCC's definition of extreme heat events, which defines them as 
+"events during which daily temperatures have reached heat warning thresholds on 2 
+or more consecutive days with no relief overnight".
+
+```{r heatwave, eval=FALSE}
+heatwave_detector(db_name =  "BC_STATION_DATA",
+                  max_threshold = 28,
+                  min_threshold = 13)
+```
+
+This function will a table and plot summarizing daily temperature averages.
+The table stores logical information on whether that day crosses the temperature 
+thresholds and whether it is considered a heatwave. The plot visualizes this 
+information by plotting daily temperatures and highlighting when heatwave events 
+occur. 
 
 
 

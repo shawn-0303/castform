@@ -43,7 +43,8 @@ Downloads hourly weather station data (as csv files) from Environment Canada.
   \item \code{\link{data_missingness_table}}: Creates a table summarizing actual, expected, and missing data counts
   \item \code{\link{data_ranges}}: Creates a table summarizing variable data ranges
   \item \code{\link{plot_yearly_means}}: Creates plots to summarize yearly variable means
-  \item \code{\link{pull_missing_strings}}: Creates a table summarizing missing data gaps
+  \item \code{\link{pull_missing_strings}}: Creates a plot and table summarizing missing data gaps
+  \item \code{\link{pull_repeated_strings}}: Creates a plot and table summarizing repeated data strings
   }
 }
 
@@ -51,6 +52,13 @@ Downloads hourly weather station data (as csv files) from Environment Canada.
 
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://shawn-0303.github.io/castform/}
+}
+
+}
 \author{
 \strong{Maintainer}: Shawn Yip \email{shawniceyip@trentu.ca}
 

@@ -1,4 +1,4 @@
-pkgdown::build_site()url: ~
+url: https://shawn-0303.github.io/castform/
 template:
   bootstrap: 5
 

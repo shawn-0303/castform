@@ -229,3 +229,31 @@ pull_repeated_strings(db_name =  "BC_station_data",
                      db_dir = "castform_outputs",
                      output_dir = "castform_outputs")
 ```
+
+## Heat Wave Detector
+
+Detects of extreme heat events using user input temperature thresholds (in Celcius).
+
+Uses ECCC's definition of extreme heat events, which defines them as 
+"events during which daily temperatures have reached heat warning thresholds on 2 
+or more consecutive days with no relief overnight".
+
+Creates a table and plot summarizing daily temperature averages. The table stores 
+logical information on whether that day crosses the temperature thresholds and 
+whether it is considered a heatwave. The plot visualizes this information by 
+plotting daily temperatures and highlighting when heatwave events occur. 
+
+```r
+heatwave_detector(db_name =  "BC_STATION_DATA",
+                  max_threshold = 28,
+                  min_threshold = 13)
+```
+
+
+
+
+
+
+
+
+
