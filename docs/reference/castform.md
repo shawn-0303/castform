@@ -1,30 +1,70 @@
 # castform: Download Environment Canada Weather Station Data
 
 Downloads hourly weather station data (as csv files) from Environment
-Canada.
+Canada. This data is downloaded from:
+https://climate.weather.gc.ca/historical_data/search_historic_data_e.html
 
-## Main functions
+## Metadata
 
-- [`get_metadata`](get_metadata.md): Downloads and loads the latest
-  station inventory metadata (RUN THIS FIRST)
+- [`get_metadata`](https://shawn-0303.github.io/castform/reference/get_metadata.md):
+  Downloads and loads the latest station inventory metadata (RUN THIS
+  FIRST)
 
-- [`get_single_station_file`](get_single_station_file.md): The primary
-  function to download one hourly data file.
+- [`station_lookup`](https://shawn-0303.github.io/castform/reference/station_lookup.md):
+  Search for available station data by province and year range.
 
-- [`get_multiple_station_files`](get_multiple_station_files.md):
+## Download Wrappers
+
+- [`get_single_station_file`](https://shawn-0303.github.io/castform/reference/get_single_station_file.md):
+  The primary function to download one hourly data file.
+
+- [`get_multiple_station_files`](https://shawn-0303.github.io/castform/reference/get_multiple_station_files.md):
   Downloads multiple hourly data files.
 
-- [`province_station_files`](province_station_files.md): Downloads data
-  files by province.
+- [`get_station_files`](https://shawn-0303.github.io/castform/reference/get_station_files.md):
+  Downloads data files by station
 
-- [`year_range_station_files`](year_range_station_files.md): Downloads
-  data files by year range.
+- [`province_station_files`](https://shawn-0303.github.io/castform/reference/province_station_files.md):
+  Downloads data files by province.
 
-- [`get_all_files`](get_all_files.md): Downloads all data files with
-  hourly data available.
+- [`year_range_station_files`](https://shawn-0303.github.io/castform/reference/year_range_station_files.md):
+  Downloads data files by year range.
 
-- [`station_lookup`](station_lookup.md): Search for available station
-  data by province and year range.
+- [`get_all_files`](https://shawn-0303.github.io/castform/reference/get_all_files.md):
+  Downloads all data files with hourly data available.
+
+## Database Building
+
+- [`build_station_database`](https://shawn-0303.github.io/castform/reference/build_station_database.md):
+  Creates a database using a folder of specified weather station data
+
+- [`validate_database`](https://shawn-0303.github.io/castform/reference/validate_database.md):
+  Validates created database
+
+## Exploratory Data Analysis
+
+- [`data_missingness_table`](https://shawn-0303.github.io/castform/reference/data_missingness_table.md):
+  Creates a table summarizing actual, expected, and missing data counts
+
+- [`data_ranges`](https://shawn-0303.github.io/castform/reference/data_ranges.md):
+  Creates a table summarizing variable data ranges
+
+- [`plot_yearly_means`](https://shawn-0303.github.io/castform/reference/plot_yearly_means.md):
+  Creates plots to summarize yearly variable means
+
+- [`pull_missing_strings`](https://shawn-0303.github.io/castform/reference/pull_missing_strings.md):
+  Creates a plot and table summarizing missing data gaps
+
+- [`pull_repeated_strings`](https://shawn-0303.github.io/castform/reference/pull_repeated_strings.md):
+  Creates a plot and table summarizing repeated data strings
+
+## Heatwave Detector
+
+## See also
+
+Useful links:
+
+- <https://shawn-0303.github.io/castform/>
 
 ## Author
 
