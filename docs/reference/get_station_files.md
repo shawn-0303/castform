@@ -1,12 +1,13 @@
-# Province Station Files
+# Get Station Files
 
-Download Environment Canada weather station files by province.
+Download Environment Canada weather data by station
 
 ## Usage
 
 ``` r
-province_station_files(
-  province = NULL,
+get_station_files(
+  station_name = NULL,
+  station_id = NULL,
   year = NULL,
   month = NULL,
   parallel_threshold = 50,
@@ -17,9 +18,14 @@ province_station_files(
 
 ## Arguments
 
-- province:
+- station_name:
 
-  Character: The province or territory of interest.
+  Character: The name of the weather station of interest.
+
+- station_id:
+
+  Numeric Integer: The unique station ID of the weather station of
+  interest.
 
 - year:
 
