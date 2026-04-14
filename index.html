@@ -59,14 +59,26 @@
 <ul>
 <li>Download latest station inventory list</li>
 <li>Search for available stations by province and year range</li>
-<li>Download a single hourly data file</li>
-<li>Download multiple hourly data files</li>
-<li>Download data files by province/territory</li>
-<li>Download data files by year range</li>
+<li>Download a station’s data files from:
+<ul>
+<li>A single month</li>
+<li>Multiple months</li>
+<li>A single province/territory</li>
+<li>A certain year Range</li>
+</ul>
+</li>
 <li>Download all available hourly station files</li>
 <li>Create a database from downloaded files</li>
-<li>Create exploratory plots</li>
-<li>Detect heatwaves from historical data</li>
+<li>Create exploratory plots to identify:
+<ul>
+<li>Missing data</li>
+<li>Data ranges</li>
+<li>Yearly variable means</li>
+<li>Missing data strings</li>
+<li>Repeated data strings</li>
+</ul>
+</li>
+<li>Detect extreme heat events in historical data</li>
 </ul>
 </div>
 <div class="section level2">
@@ -78,8 +90,11 @@
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"shawn-0303/castform_package"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="loading-metadata">Loading Metadata<a class="anchor" aria-label="anchor" href="#loading-metadata"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
+<div class="section level3">
+<h3 id="loading-metadata">Loading Metadata<a class="anchor" aria-label="anchor" href="#loading-metadata"></a>
+</h3>
 <p>This needs to be the FIRST STEP of your analysis.</p>
 <p>Download the latest station inventory list using <code><a href="reference/get_metadata.html">get_metadata()</a></code>. This function will download the latest station inventory list and store each new version as a .csv and .rda file. Whenever this function is run, it will also load the station list into the global environment as <code>Hourly_station_info</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -87,9 +102,9 @@
 <span></span>
 <span><span class="fu"><a href="reference/get_metadata.html">get_metadata</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="searching-for-station-information">Searching for Station Information<a class="anchor" aria-label="anchor" href="#searching-for-station-information"></a>
-</h2>
+<div class="section level3">
+<h3 id="searching-for-station-information">Searching for Station Information<a class="anchor" aria-label="anchor" href="#searching-for-station-information"></a>
+</h3>
 <p>All the download wrappers require specific information about the station(s) the user wants to download. This information can be pulled from the metadata using station_lookup().</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/station_lookup.html">station_lookup</a></span><span class="op">(</span>province <span class="op">=</span> <span class="st">"prince edward island"</span>,</span>
@@ -97,14 +112,14 @@
 <span>               end_year <span class="op">=</span> <span class="fl">2001</span><span class="op">)</span></span></code></pre></div>
 <p>You can search for stations by <code>Province</code> as well as the <code>start_year</code> and <code>end_year</code> of hourly data collection.</p>
 </div>
-<div class="section level2">
-<h2 id="downloading-files">Downloading files<a class="anchor" aria-label="anchor" href="#downloading-files"></a>
-</h2>
+<div class="section level3">
+<h3 id="downloading-files">Downloading files<a class="anchor" aria-label="anchor" href="#downloading-files"></a>
+</h3>
 <p>The following are various download wrappers that will download historic weather station data as .csv files.</p>
 <p>By default, all downloads are written to a new “station_data” folder in the working directory.</p>
-<div class="section level3">
-<h3 id="download-a-single-station-file">Download a Single Station File<a class="anchor" aria-label="anchor" href="#download-a-single-station-file"></a>
-</h3>
+<div class="section level4">
+<h4 id="download-a-single-station-file">Download a Single Station File<a class="anchor" aria-label="anchor" href="#download-a-single-station-file"></a>
+</h4>
 <p>Download a single .csv file from a specified station that stores a month of hourly weather data.</p>
 <p>If your goal is a larger download, it is a good idea to verify your station information and output directories using this function.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -114,9 +129,9 @@
 <span>                        month <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                        root_folder <span class="op">=</span> <span class="st">"station_data"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="downloading-multiple-station-files">Downloading Multiple Station Files<a class="anchor" aria-label="anchor" href="#downloading-multiple-station-files"></a>
-</h3>
+<div class="section level4">
+<h4 id="downloading-multiple-station-files">Downloading Multiple Station Files<a class="anchor" aria-label="anchor" href="#downloading-multiple-station-files"></a>
+</h4>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/get_multiple_station_files.html">get_multiple_station_files</a></span><span class="op">(</span>station_name <span class="op">=</span> <span class="st">"discovery island"</span>,</span>
 <span>                           station_id <span class="op">=</span> <span class="fl">27226</span>,</span>
@@ -126,27 +141,27 @@
 <span>                           parallel_threshold <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>                           root_folder <span class="op">=</span> <span class="st">"station_data"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="downloading-files-by-station">Downloading Files by Station<a class="anchor" aria-label="anchor" href="#downloading-files-by-station"></a>
-</h3>
+<div class="section level4">
+<h4 id="downloading-files-by-station">Downloading Files by Station<a class="anchor" aria-label="anchor" href="#downloading-files-by-station"></a>
+</h4>
 <p>Can specify by <code>year</code> and <code>month</code>, but if left empty, will download all data available for that station.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">get_station_files</span>(<span class="at">station_name =</span> <span class="st">"discovery island"</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                  <span class="at">station_id =</span> <span class="dv">27226</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                  <span class="at">parallel_threshold =</span> <span class="dv">50</span>,</span>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                  <span class="at">root_folder =</span> <span class="st">"station_data"</span>)</span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="downloading-files-by-province">Downloading Files by Province<a class="anchor" aria-label="anchor" href="#downloading-files-by-province"></a>
-</h3>
+<div class="section level4">
+<h4 id="downloading-files-by-province">Downloading Files by Province<a class="anchor" aria-label="anchor" href="#downloading-files-by-province"></a>
+</h4>
 <p>Can specify by <code>year</code> and <code>month</code>, but if left empty, will download all data available for that province.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/province_station_files.html">province_station_files</a></span><span class="op">(</span>province <span class="op">=</span> <span class="st">"prince edward island"</span>,</span>
 <span>                       parallel_threshold <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>                       root_folder <span class="op">=</span> <span class="st">"station_data"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="downloading-files-by-year-range">Downloading Files by Year Range<a class="anchor" aria-label="anchor" href="#downloading-files-by-year-range"></a>
-</h3>
+<div class="section level4">
+<h4 id="downloading-files-by-year-range">Downloading Files by Year Range<a class="anchor" aria-label="anchor" href="#downloading-files-by-year-range"></a>
+</h4>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/year_range_station_files.html">year_range_station_files</a></span><span class="op">(</span>station_name <span class="op">=</span> <span class="st">"discovery island"</span>,</span>
 <span>                         station_id <span class="op">=</span> <span class="fl">27226</span>,</span>
@@ -155,18 +170,18 @@
 <span>                         parallel_threshold <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>                         root_folder <span class="op">=</span> <span class="st">"station_data"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="download-all-available-hourly-station-data">Download All Available Hourly Station Data<a class="anchor" aria-label="anchor" href="#download-all-available-hourly-station-data"></a>
-</h3>
+<div class="section level4">
+<h4 id="download-all-available-hourly-station-data">Download All Available Hourly Station Data<a class="anchor" aria-label="anchor" href="#download-all-available-hourly-station-data"></a>
+</h4>
 <p>This function downloads all available historical hourly weather station data from Canada and <strong>will result in a very large download.</strong></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/get_all_files.html">get_all_files</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="making-databases">Making Databases<a class="anchor" aria-label="anchor" href="#making-databases"></a>
-</h2>
-<p>Creates a searchable database with a specified folder of hourly weather station data. By default, data will be pulled from the package’s default data storage folder (“station_data”) in the user’s working directory and the database will be stored in the same folder.</p>
+<div class="section level3">
+<h3 id="making-databases">Making Databases<a class="anchor" aria-label="anchor" href="#making-databases"></a>
+</h3>
+<p>Creates a searchable database with a specified folder of hourly weather station data.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>build_station_database <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">db_name =</span> <span class="st">"BC_station_data"</span>, </span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>                                   <span class="at">output_dir =</span> <span class="st">"castform_outputs"</span>, </span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>                                   <span class="at">root_folder =</span> <span class="st">"downloaded_data/BC"</span>) </span></code></pre></div>
@@ -179,10 +194,10 @@
 <li>
 <code>Observation</code>: Stores information from downloaded station data (.csv) files</li>
 </ul>
-<div class="section level3">
-<h3 id="validate-the-database">Validate the Database<a class="anchor" aria-label="anchor" href="#validate-the-database"></a>
-</h3>
-<p>After creation, it is a good idea to validate the created database using <code><a href="reference/validate_database.html">validate_database()</a></code> This will check for the created tables, list the number of observations within each table, and lists the first five observations within the Observation table.</p>
+<div class="section level4">
+<h4 id="validate-the-database">Validate the Database<a class="anchor" aria-label="anchor" href="#validate-the-database"></a>
+</h4>
+<p>After creation, it is a good idea to validate the created database using <code><a href="reference/validate_database.html">validate_database()</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/validate_database.html">validate_database</a></span><span class="op">(</span>db_name <span class="op">=</span> <span class="st">"BC_station_data"</span>,</span>
 <span>                  db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
@@ -197,49 +212,49 @@
 </ul>
 </div>
 </div>
-<div class="section level2">
-<h2 id="exploratory-data-analysis">Exploratory Data Analysis<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis"></a>
-</h2>
-<p>Queries and produces .html outputs to visualize the structure and summary of the data. Each table provides buttons for users to copy the output or download a <code>.csv</code> or <code>.pdf</code>.</p>
 <div class="section level3">
-<h3 id="data-missingness">Data Missingness<a class="anchor" aria-label="anchor" href="#data-missingness"></a>
+<h3 id="exploratory-data-analysis">Exploratory Data Analysis<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis"></a>
 </h3>
+<p>Queries and produces .html outputs to visualize the structure and summary of the data. Each table provides buttons for users to copy the output or download a <code>.csv</code> or <code>.pdf</code>.</p>
+<div class="section level4">
+<h4 id="data-missingness">Data Missingness<a class="anchor" aria-label="anchor" href="#data-missingness"></a>
+</h4>
 <p>Creates a table outlining the expected and actual data counts, along with the percentage of missing data for each variable in each station.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/data_missingness_table.html">data_missingness_table</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>                       db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>                       output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="data-ranges">Data Ranges<a class="anchor" aria-label="anchor" href="#data-ranges"></a>
-</h3>
+<div class="section level4">
+<h4 id="data-ranges">Data Ranges<a class="anchor" aria-label="anchor" href="#data-ranges"></a>
+</h4>
 <p>Creates a table summarizing the average, minimum and maximum value of each variable in each station.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/data_ranges.html">data_ranges</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>            db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>            output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="yearly-means">Yearly Means<a class="anchor" aria-label="anchor" href="#yearly-means"></a>
-</h3>
+<div class="section level4">
+<h4 id="yearly-means">Yearly Means<a class="anchor" aria-label="anchor" href="#yearly-means"></a>
+</h4>
 <p>Create plots that summarize the means of every variable over time (where station data is available)</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_yearly_means.html">plot_yearly_means</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>                  db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>                  output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="missing-strings">Missing Strings<a class="anchor" aria-label="anchor" href="#missing-strings"></a>
-</h3>
-<p>Creates a table identifying when data is missing. Stores the length (in hours) and start and end date/time of the data gap. Also creates a plot to visualize these gaps.</p>
+<div class="section level4">
+<h4 id="missing-strings">Missing Strings<a class="anchor" aria-label="anchor" href="#missing-strings"></a>
+</h4>
+<p>Creates a table identifying when data is missing.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/pull_missing_strings.html">pull_missing_strings</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>                     db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>                     output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="repeated-strings">Repeated Strings<a class="anchor" aria-label="anchor" href="#repeated-strings"></a>
-</h3>
+<div class="section level4">
+<h4 id="repeated-strings">Repeated Strings<a class="anchor" aria-label="anchor" href="#repeated-strings"></a>
+</h4>
 <p>Creates a table identifying strings of repeated values that occur for three hours or more. The table stores the length (in hours) and start and end date/time of the repeated strings. Also creates a plot to visualize these strings.</p>
 <p><strong>NOTE:</strong> This will take longer to run on larger datasets. Large datasets will also require zooming into plots to see outputs or else the plot will look empty.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -248,16 +263,16 @@
 <span>                     output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="heat-wave-detector">Heat Wave Detector<a class="anchor" aria-label="anchor" href="#heat-wave-detector"></a>
-</h2>
-<p>Detects of extreme heat events using user input temperature thresholds (in Celcius).</p>
+<div class="section level3">
+<h3 id="heat-wave-detector">Heat Wave Detector<a class="anchor" aria-label="anchor" href="#heat-wave-detector"></a>
+</h3>
+<p>Detects of extreme heat events using user input temperature thresholds (in Celcius) and creates a table and plot summarizing daily temperature averages.</p>
 <p>Uses ECCC’s definition of extreme heat events, which defines them as “events during which daily temperatures have reached heat warning thresholds on 2 or more consecutive days with no relief overnight”.</p>
-<p>Creates a table and plot summarizing daily temperature averages. The table stores logical information on whether that day crosses the temperature thresholds and whether it is considered a heatwave. The plot visualizes this information by plotting daily temperatures and highlighting when heatwave events occur.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/heatwave_detector.html">heatwave_detector</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_STATION_DATA"</span>,</span>
 <span>                  max_threshold <span class="op">=</span> <span class="fl">28</span>,</span>
 <span>                  min_threshold <span class="op">=</span> <span class="fl">13</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
