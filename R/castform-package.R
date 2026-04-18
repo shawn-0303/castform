@@ -36,6 +36,7 @@
 #'
 #' @section Exploratory Data Analysis:
 #' \itemize{
+#'   \item \code{\link{station_map}}: Creates a map visualizing stations of interest
 #'   \item \code{\link{data_missingness_table}}: Creates a table summarizing actual, expected, and missing data counts
 #'   \item \code{\link{data_ranges}}: Creates a table summarizing variable data ranges
 #'   \item \code{\link{plot_yearly_means}}: Creates plots to summarize yearly variable means
@@ -44,6 +45,9 @@
 #'   }
 #'
 #' @section Heatwave Detector:
+#' \itemize{
+#'   \item \code{\link{heatwave_detector}}: Identifies extreme heat events (heatwaves) based on set temperature thresholds.
+#'    }
 #'
 #' @name castform
 #'

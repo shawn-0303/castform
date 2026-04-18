@@ -19,10 +19,13 @@ heatwave_detector(
 
 \item{min_threshold}{Numeric: Minimum temperature threshold for an extreme heat event}
 
-\item{db_dir}{The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
+\item{db_dir}{Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
 
-\item{output_dir}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+\item{output_dir}{Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+}
+\value{
+Produces a `.html` table and plot output summarizing average daily temperatures and flags extreme heat events based on user input thresholds.
 }
 \description{
-Scan the downloaded data to detect extreme heat events. Produces a `.html` table and plot output summarizing average daily temperatures and flags extreme heat events based on user input thresholds.
+Scans the downloaded data to detect extreme heat events. If no temperature thresholds are provided, will use Environment Canada's definition of an extreme heat event (https://www.canada.ca/en/environment-climate-change/services/environmental-indicators/extreme-heat-events.html)
 }

@@ -17,6 +17,9 @@ pull_repeated_strings(
 
 \item{output_dir}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
 }
+\value{
+a `.html` output table and plot that stores the length of the repeat (in hours) as well as the start and end date/time. Large amounts of data mayt take longer to load and require users to zoom into the plot to see points.
+}
 \description{
-Creates a `.html` output table and plot identifying when data values are repeated at least three times in a row. Stores the length of the repeat (in hours) as well as the start and end date/time. Large amounts of data mayt take longer to load and require users to zoom into the plot to see points.
+Identifies when data values are repeated at least three times in a row.
 }

@@ -57,6 +57,8 @@ build_station_database <- function(db_name = NULL, HLY_station_info = NULL, outp
 
   DBI::dbExecute(con, "
   CREATE TABLE Observation(
+    Longitude REAL,
+    Latitude REAL,
     Station_ID INTEGER,
     Year INTEGER,
     Month INTEGER,
@@ -150,7 +152,9 @@ build_station_database <- function(db_name = NULL, HLY_station_info = NULL, outp
       if (nrow(df) == 0) { p(); return(NULL) }
 
       df_clean <- df |>
-        dplyr::select(Climate_ID      = Climate.ID,
+        dplyr::select(Longitude      = Longitude..x.,
+                      Latitude        = Latitude..y.,
+                      Climate_ID      = Climate.ID,
                       Year            = Year,
                       Month           = Month,
                       Day             = Day,

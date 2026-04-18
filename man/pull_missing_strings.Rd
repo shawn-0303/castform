@@ -13,10 +13,13 @@ pull_missing_strings(
 \arguments{
 \item{db_name}{Character: The name of the database}
 
-\item{db_dir}{The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
+\item{db_dir}{Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
 
-\item{output_dir}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+\item{output_dir}{Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+}
+\value{
+A `.html` output table and plot that displays the length of the data gap (in hours) as well as the start and end date/time.
 }
 \description{
-Creates a `.html` output table and plot to identify when data is missing from the database. Stores the length of the data gap (in hours) as well as the start and end date/time.
+Identifies when data is missing from the database.
 }

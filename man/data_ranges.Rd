@@ -13,10 +13,13 @@ data_ranges(
 \arguments{
 \item{db_name}{Character: The name of the database}
 
-\item{db_dir}{The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
+\item{db_dir}{Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
 
-\item{output_dir}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+\item{output_dir}{Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+}
+\value{
+Creates a `.html` output table that stores the average, minimum, and maximum values for each variable.
 }
 \description{
-Creates a `.html` output table with data ranges from each station within a database. Stores the average, minimum, and maximum values for each variable.
+Identifies the data ranges from each station within a database.
 }

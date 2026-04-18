@@ -1,10 +1,12 @@
 #' Pull Strings of Missing Data
 #'
-#' Creates a `.html` output table and plot to identify when data is missing from the database. Stores the length of the data gap (in hours) as well as the start and end date/time.
+#' Identifies when data is missing from the database.
 #'
 #' @param db_name Character: The name of the database
-#' @param db_dir The directory of the database, If left unchanged, will default to package's default created directory "station_data".
-#' @param output_dir The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param db_dir Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".
+#' @param output_dir Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#'
+#' @return A `.html` output table and plot that displays the length of the data gap (in hours) as well as the start and end date/time.
 #'
 #' @export
 pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data") {
@@ -16,7 +18,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     con <- DBI::dbConnect(RSQLite::SQLite(), dbname = db_path)
     on.exit(DBI::dbDisconnect(con))
 
-    message("Querying stations in database...")
+    message("Querying statidata:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAbElEQVR4Xs2RQQrAMAgEfZgf7W9LAguybljJpR3wEse5JOL3ZObDb4x1loDhHbBOFU6i2Ddnw2KNiXcdAXygJlwE8OFVBHDgKrLgSInN4WMe9iXiqIVsTMjH7z/GhNTEibOxQswcYIWYOR/zAjBJfiXh3jZ6AAAAAElFTkSuQmCCons in database...")
     stations_in_database <- DBI::dbGetQuery(con,
                                             "SELECT DISTINCT Station_Name, Station_ID
                                        FROM Station
