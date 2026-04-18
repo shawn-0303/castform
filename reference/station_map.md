@@ -1,14 +1,17 @@
-# Data Missingness Table
+# Plot Stations on Map
 
-Identifies data missingness from each station within a database.
+Allows for users to plot all metadata stations or selected stations on a
+map of Canada.
 
 ## Usage
 
 ``` r
-data_missingness_table(
+station_map(
   db_name = NULL,
   db_dir = "station_data",
-  output_dir = "station_data"
+  output_dir = "station_data",
+  output_name = NULL,
+  metadata_stations = FALSE
 )
 ```
 
@@ -29,7 +32,14 @@ data_missingness_table(
   unchanged, will create a new "station_data" folder in the working
   directory.
 
+- output_name:
+
+  Character: The chosen name of the output \`png\` object.
+
+- metadata_stations:
+
+  Logical: Plot all stations in the metadata (default = FALSE)
+
 ## Value
 
-An \`.html\` output table that stores the expected, account, and percent
-missing counts for each variable.
+A \`.png\` of the created map

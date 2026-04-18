@@ -43,6 +43,9 @@ https://climate.weather.gc.ca/historical_data/search_historic_data_e.html
 
 ## Exploratory Data Analysis
 
+- [`station_map`](https://shawn-0303.github.io/castform/reference/station_map.md):
+  Creates a map visualizing stations of interest
+
 - [`data_missingness_table`](https://shawn-0303.github.io/castform/reference/data_missingness_table.md):
   Creates a table summarizing actual, expected, and missing data counts
 
@@ -59,6 +62,10 @@ https://climate.weather.gc.ca/historical_data/search_historic_data_e.html
   Creates a plot and table summarizing repeated data strings
 
 ## Heatwave Detector
+
+- [`heatwave_detector`](https://shawn-0303.github.io/castform/reference/heatwave_detector.md):
+  Identifies extreme heat events (heatwaves) based on set temperature
+  thresholds.
 
 ## See also
 

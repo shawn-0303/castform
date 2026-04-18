@@ -8,6 +8,10 @@
   : Data Missingness Table
 - [`data_ranges()`](https://shawn-0303.github.io/castform/reference/data_ranges.md)
   : Data Ranges Table
+- [`.climate_regions_stations()`](https://shawn-0303.github.io/castform/reference/dot-climate_regions_stations.md)
+  : Identify Station Climate Region
+- [`.mapping()`](https://shawn-0303.github.io/castform/reference/dot-mapping.md)
+  : Create station map
 - [`get_all_files()`](https://shawn-0303.github.io/castform/reference/get_all_files.md)
   : Get All Hourly Station Files
 - [`get_metadata()`](https://shawn-0303.github.io/castform/reference/get_metadata.md)
@@ -30,6 +34,8 @@
   : Pull Strings of Repeated Data
 - [`station_lookup()`](https://shawn-0303.github.io/castform/reference/station_lookup.md)
   : Station Look-Up
+- [`station_map()`](https://shawn-0303.github.io/castform/reference/station_map.md)
+  : Plot Stations on Map
 - [`validate_database()`](https://shawn-0303.github.io/castform/reference/validate_database.md)
   : Validate Created Database
 - [`year_range_station_files()`](https://shawn-0303.github.io/castform/reference/year_range_station_files.md)

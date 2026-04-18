@@ -196,6 +196,22 @@ Queries and produces .html outputs to visualize the structure and
 summary of the data. Each table provides buttons for users to copy the
 output or download a `.csv` or `.pdf`.
 
+### Create Map of Stations
+
+Creates a map to visualize stations of metadata. If
+`metadata_stations = TRUE`, this function will map all stations with
+hourly data available.
+
+``` r
+station_map(db_name =  "BC_station_data",
+            db_dir = "castform_outputs",
+            output_dir = "castform_outputs",
+            output_name = "BC_station_map",
+            metadata_stations = FALSE)
+            
+station_map(metadata_stations = TRUE)
+```
+
 #### Data Missingness
 
 Creates a table outlining the expected and actual data counts, along

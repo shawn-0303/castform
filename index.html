@@ -216,11 +216,24 @@
 <h3 id="exploratory-data-analysis">Exploratory Data Analysis<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis"></a>
 </h3>
 <p>Queries and produces .html outputs to visualize the structure and summary of the data. Each table provides buttons for users to copy the output or download a <code>.csv</code> or <code>.pdf</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="create-map-of-stations">Create Map of Stations<a class="anchor" aria-label="anchor" href="#create-map-of-stations"></a>
+</h3>
+<p>Creates a map to visualize stations of metadata. If <code>metadata_stations = TRUE</code>, this function will map all stations with hourly data available.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/station_map.html">station_map</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
+<span>            db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
+<span>            output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
+<span>            output_name <span class="op">=</span> <span class="st">"BC_station_map"</span>,</span>
+<span>            metadata_stations <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>            </span>
+<span><span class="fu"><a href="reference/station_map.html">station_map</a></span><span class="op">(</span>metadata_stations <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="data-missingness">Data Missingness<a class="anchor" aria-label="anchor" href="#data-missingness"></a>
 </h4>
 <p>Creates a table outlining the expected and actual data counts, along with the percentage of missing data for each variable in each station.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/data_missingness_table.html">data_missingness_table</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>                       db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>                       output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
@@ -229,7 +242,7 @@
 <h4 id="data-ranges">Data Ranges<a class="anchor" aria-label="anchor" href="#data-ranges"></a>
 </h4>
 <p>Creates a table summarizing the average, minimum and maximum value of each variable in each station.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/data_ranges.html">data_ranges</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>            db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>            output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
@@ -238,7 +251,7 @@
 <h4 id="yearly-means">Yearly Means<a class="anchor" aria-label="anchor" href="#yearly-means"></a>
 </h4>
 <p>Create plots that summarize the means of every variable over time (where station data is available)</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plot_yearly_means.html">plot_yearly_means</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>                  db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>                  output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
@@ -247,7 +260,7 @@
 <h4 id="missing-strings">Missing Strings<a class="anchor" aria-label="anchor" href="#missing-strings"></a>
 </h4>
 <p>Creates a table identifying when data is missing.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/pull_missing_strings.html">pull_missing_strings</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>                     db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>                     output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
@@ -257,7 +270,7 @@
 </h4>
 <p>Creates a table identifying strings of repeated values that occur for three hours or more. The table stores the length (in hours) and start and end date/time of the repeated strings. Also creates a plot to visualize these strings.</p>
 <p><strong>NOTE:</strong> This will take longer to run on larger datasets. Large datasets will also require zooming into plots to see outputs or else the plot will look empty.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/pull_repeated_strings.html">pull_repeated_strings</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>                     db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
 <span>                     output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
@@ -268,7 +281,7 @@
 </h3>
 <p>Detects of extreme heat events using user input temperature thresholds (in Celcius) and creates a table and plot summarizing daily temperature averages.</p>
 <p>Uses ECCC’s definition of extreme heat events, which defines them as “events during which daily temperatures have reached heat warning thresholds on 2 or more consecutive days with no relief overnight”.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/heatwave_detector.html">heatwave_detector</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_STATION_DATA"</span>,</span>
 <span>                  max_threshold <span class="op">=</span> <span class="fl">28</span>,</span>
 <span>                  min_threshold <span class="op">=</span> <span class="fl">13</span><span class="op">)</span></span></code></pre></div>

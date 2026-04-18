@@ -308,10 +308,32 @@ underscores and be turned to uppercase.
 Every EDA function has the same three parameters:
 
 - `db_name` = The name of the database
-- `db_dir` = The directory where the database is stored (“station_data”
-  as default)
+- `db_dir` = The directory where the database is stored
+  (“station_data_name_outputs” as default)
 - `output_dir` = The directory where produced outputs will be stored
-  (“station_data” as default)
+  (“station_data_name_outputs” as default)
+
+### Station Map
+
+[`station_map()`](https://shawn-0303.github.io/castform/reference/station_map.md)
+creates a `.png` that plots the stations of interest on a map of Canada.
+
+``` r
+station_map(db_name =  "BC_STATION_DATA",
+            output_name = "bc station map")
+```
+
+`output_name` refers to the name of the final output `.png` and must be
+specified by the user.
+
+If `metadata_stations` is set to `TRUE`, `db_name` must be left empty.
+The function will use `HLY_Station_Info` to plot and visualize all
+stations with hourly data available.
+
+``` r
+station_map(metadata_stations = TRUE,
+            output_name = "metadata station map")
+```
 
 ### Data Missingness Table
 
@@ -386,6 +408,20 @@ This function uses ECCC’s definition of extreme heat events, which
 defines them as “events during which daily temperatures have reached
 heat warning thresholds on 2 or more consecutive days with no relief
 overnight”.
+
+To use ECCC temperature thresholds, leave `max_threshold` and
+`min_threshold` blank and they will be automatically applied.
+Temperature thresholds and station climate rgions were last updated on
+**April 18, 2026**, using:
+
+<https://www.canada.ca/en/environment-climate-change/services/environmental-indicators/extreme-heat-events.html>.
+
+``` r
+heatwave_detector(db_name =  "BC_STATION_DATA")
+```
+
+If `max_threshold` and `min_threshold` are specified by the user, input
+values will take priority and be applied.
 
 ``` r
 heatwave_detector(db_name =  "BC_STATION_DATA",

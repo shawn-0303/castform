@@ -196,6 +196,22 @@ Queries and produces .html outputs to visualize the structure and
 summary of the data. Each table provides buttons for users to copy the
 output or download a `.csv` or `.pdf`.
 
+### Create Map of Stations
+
+Creates a map to visualize stations of metadata. If
+`metadata_stations = TRUE`, this function will map all stations with
+hourly data available.
+
+``` r
+station_map(db_name =  "BC_station_data",
+            db_dir = "castform_outputs",
+            output_dir = "castform_outputs",
+            output_name = "BC_station_map",
+            metadata_stations = FALSE)
+            
+station_map(metadata_stations = TRUE)
+```
+
 #### Data Missingness
 
 Creates a table outlining the expected and actual data counts, along
@@ -282,6 +298,10 @@ heatwave_detector(db_name =  "BC_STATION_DATA",
   : Data Missingness Table
 - [`data_ranges()`](https://shawn-0303.github.io/castform/reference/data_ranges.md)
   : Data Ranges Table
+- [`.climate_regions_stations()`](https://shawn-0303.github.io/castform/reference/dot-climate_regions_stations.md)
+  : Identify Station Climate Region
+- [`.mapping()`](https://shawn-0303.github.io/castform/reference/dot-mapping.md)
+  : Create station map
 - [`get_all_files()`](https://shawn-0303.github.io/castform/reference/get_all_files.md)
   : Get All Hourly Station Files
 - [`get_metadata()`](https://shawn-0303.github.io/castform/reference/get_metadata.md)
@@ -304,6 +324,8 @@ heatwave_detector(db_name =  "BC_STATION_DATA",
   : Pull Strings of Repeated Data
 - [`station_lookup()`](https://shawn-0303.github.io/castform/reference/station_lookup.md)
   : Station Look-Up
+- [`station_map()`](https://shawn-0303.github.io/castform/reference/station_map.md)
+  : Plot Stations on Map
 - [`validate_database()`](https://shawn-0303.github.io/castform/reference/validate_database.md)
   : Validate Created Database
 - [`year_range_station_files()`](https://shawn-0303.github.io/castform/reference/year_range_station_files.md)

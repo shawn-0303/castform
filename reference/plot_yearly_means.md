@@ -1,7 +1,6 @@
 # Yearly Mean Plots
 
-Creates \`.html\` output plots that summarize the average of each
-variable over time.
+Summarizes the average of each variable over time.
 
 ## Usage
 
@@ -21,10 +20,15 @@ plot_yearly_means(
 
 - db_dir:
 
-  The directory of the database, If left unchanged, will default to
-  package's default created directory "station_data".
+  Character: The directory of the database, If left unchanged, will
+  default to package's default created directory "station_data".
 
 - output_dir:
 
-  The created download folder and file path. If left unchanged, will
-  create a new "station_data" folder in the working directory.
+  Character: The created download folder and file path. If left
+  unchanged, will create a new "station_data" folder in the working
+  directory.
+
+## Value
+
+An \`.html\` output line plot visualizing the data.
