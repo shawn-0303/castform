@@ -233,37 +233,37 @@
 <h4 id="data-missingness">Data Missingness<a class="anchor" aria-label="anchor" href="#data-missingness"></a>
 </h4>
 <p>Creates a table outlining the expected and actual data counts, along with the percentage of missing data for each variable in each station.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/data_missingness_table.html">data_missingness_table</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
-<span>                       db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
-<span>                       output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">data_missingness_table</span>(<span class="at">db_name =</span>  <span class="st">"BC_station_data"</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>                       <span class="at">db_dir =</span> <span class="st">"castform_outputs"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>                       <span class="at">output_dir =</span> <span class="st">"castform_outputs"</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>                       <span class="at">output_name =</span> <span class="st">"BC_data_missingness"</span>,)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="data-ranges">Data Ranges<a class="anchor" aria-label="anchor" href="#data-ranges"></a>
 </h4>
 <p>Creates a table summarizing the average, minimum and maximum value of each variable in each station.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/data_ranges.html">data_ranges</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
-<span>            db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
-<span>            output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">data_ranges</span>(<span class="at">db_name =</span>  <span class="st">"BC_station_data"</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>            <span class="at">db_dir =</span> <span class="st">"castform_outputs"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>            <span class="at">output_dir =</span> <span class="st">"castform_outputs"</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>            <span class="at">output_name =</span> <span class="st">"BC_data_ranges,)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="yearly-means">Yearly Means<a class="anchor" aria-label="anchor" href="#yearly-means"></a>
 </h4>
 <p>Create plots that summarize the means of every variable over time (where station data is available)</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_yearly_means.html">plot_yearly_means</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
-<span>                  db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
-<span>                  output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">plot_yearly_means</span>(<span class="at">db_name =</span>  <span class="st">"BC_station_data"</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>                  <span class="at">db_dir =</span> <span class="st">"castform_outputs"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>                  <span class="at">output_dir =</span> <span class="st">"castform_outputs,</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="st">                  output_name = "</span>BC_yearly_means<span class="st">","</span>)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="missing-strings">Missing Strings<a class="anchor" aria-label="anchor" href="#missing-strings"></a>
 </h4>
 <p>Creates a table identifying when data is missing.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/pull_missing_strings.html">pull_missing_strings</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
-<span>                     db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
-<span>                     output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">pull_missing_strings</span>(<span class="at">db_name =</span>  <span class="st">"BC_station_data"</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>                     <span class="at">db_dir =</span> <span class="st">"castform_outputs"</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>                     <span class="at">output_dir =</span> <span class="st">"castform_outputs</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="st">                     output_name = "</span>BC_missing_strings<span class="st">","</span>)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="repeated-strings">Repeated Strings<a class="anchor" aria-label="anchor" href="#repeated-strings"></a>
@@ -273,7 +273,8 @@
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/pull_repeated_strings.html">pull_repeated_strings</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_station_data"</span>,</span>
 <span>                     db_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
-<span>                     output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span><span class="op">)</span></span></code></pre></div>
+<span>                     output_dir <span class="op">=</span> <span class="st">"castform_outputs"</span>,</span>
+<span>                     output_name <span class="op">=</span> <span class="st">"BC_repeated_strings"</span>,<span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
