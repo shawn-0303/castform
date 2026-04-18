@@ -308,10 +308,13 @@ underscores and be turned to uppercase.
 Every EDA function has the same three parameters:
 
 - `db_name` = The name of the database
-- `db_dir` = The directory where the database is stored
-  (“station_data_name_outputs” as default)
+- `db_dir` = The directory where the database is stored (default =
+  “station_data_name_outputs”)
 - `output_dir` = The directory where produced outputs will be stored
-  (“station_data_name_outputs” as default)
+  (default = “station_data_name_outputs”)
+- `output_name` = The name of the produced `.html` and `.png` outputs.
+  If left empty. the default file name will start with “db_name” and end
+  with the related EDA function.
 
 ### Station Map
 
@@ -322,9 +325,6 @@ creates a `.png` that plots the stations of interest on a map of Canada.
 station_map(db_name =  "BC_STATION_DATA",
             output_name = "bc station map")
 ```
-
-`output_name` refers to the name of the final output `.png` and must be
-specified by the user.
 
 If `metadata_stations` is set to `TRUE`, `db_name` must be left empty.
 The function will use `HLY_Station_Info` to plot and visualize all

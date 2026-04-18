@@ -359,10 +359,15 @@ underscores and be turned to uppercase.</p>
 <code>db_name</code> = The name of the database</li>
 <li>
 <code>db_dir</code> = The directory where the database is stored
-(“station_data_name_outputs” as default)</li>
+(default = “station_data_name_outputs”)</li>
 <li>
 <code>output_dir</code> = The directory where produced outputs will
-be stored (“station_data_name_outputs” as default)</li>
+be stored (default = “station_data_name_outputs”)</li>
+<li>
+<code>output_name</code> = The name of the produced
+<code>.html</code> and <code>.png</code> outputs. If left empty. the
+default file name will start with “db_name” and end with the related EDA
+function.</li>
 </ul>
 <div class="section level3">
 <h3 id="station-map">Station Map<a class="anchor" aria-label="anchor" href="#station-map"></a>
@@ -372,8 +377,6 @@ stations of interest on a map of Canada.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/station_map.html">station_map</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_STATION_DATA"</span>,</span>
 <span>            output_name <span class="op">=</span> <span class="st">"bc station map"</span><span class="op">)</span></span></code></pre></div>
-<p><code>output_name</code> refers to the name of the final output
-<code>.png</code> and must be specified by the user.</p>
 <p>If <code>metadata_stations</code> is set to <code>TRUE</code>,
 <code>db_name</code> must be left empty. The function will use
 <code>HLY_Station_Info</code> to plot and visualize all stations with
