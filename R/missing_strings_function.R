@@ -5,12 +5,14 @@
 #' @param db_name Character: The name of the database
 #' @param db_dir Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".
 #' @param output_dir Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param output_name Character: The name of the output file. If left unfilled, the function will name the file "db_name_missingness_table.html"
 #'
 #' @return A `.html` output table and plot that displays the length of the data gap (in hours) as well as the start and end date/time.
 #'
 #' @export
-pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data") {
+pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL) {
   db_name_clean <- gsub(" ", "_", toupper(db_name))
+  output_name_clean <- gsub(" ", "_", toupper(output_name))
 
   db_path <- file.path(db_dir, paste0(db_name_clean, ".sqlite"))
 
@@ -18,7 +20,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     con <- DBI::dbConnect(RSQLite::SQLite(), dbname = db_path)
     on.exit(DBI::dbDisconnect(con))
 
-    message("Querying statidata:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAbElEQVR4Xs2RQQrAMAgEfZgf7W9LAguybljJpR3wEse5JOL3ZObDb4x1loDhHbBOFU6i2Ddnw2KNiXcdAXygJlwE8OFVBHDgKrLgSInN4WMe9iXiqIVsTMjH7z/GhNTEibOxQswcYIWYOR/zAjBJfiXh3jZ6AAAAAElFTkSuQmCCons in database...")
+    message("Querying stations in database...")
     stations_in_database <- DBI::dbGetQuery(con,
                                             "SELECT DISTINCT Station_Name, Station_ID
                                        FROM Station
@@ -70,7 +72,14 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
                                                                     list(extend = 'csv', title = paste0(db_name_clean, "_missing_strings")),
                                                                     list(extend = 'pdf', title = paste0(db_name_clean, "_missing_strings")))))
 
-    table_output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_missing_strings_table.html"))
+    output_path <- file.path(getwd(), output_dir, paste0(db_name_clean, "_outputs"))
+    if (!dir.exists(output_path )) dir.create(output_path , recursive = TRUE)
+
+    if (is.null(output_name)) {
+      table_output_file <- file.path(output_path, paste0(db_name_clean, "_missing_strings_table.html"))
+    } else {
+      table_output_file <- file.path(output_path, paste0(output_name_clean, "_table.html"))
+    }
 
     tmp_dir <- tempdir()
     tmp_file <- file.path(tmp_dir, "temp_table.html")
@@ -119,7 +128,11 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
       interactive_plot
     )
 
-    plot_output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_missing_strings_plot.html"))
+    if (is.null(output_name)) {
+      plot_output_file <- file.path(output_path, paste0(db_name_clean, "_missing_strings_plot.html"))
+    } else {
+      plot_output_file <- file.path(output_path, paste0(output_name_clean, "_plot.html"))
+    }
 
     message("Saving HTML plot...")
 

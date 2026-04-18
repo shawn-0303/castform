@@ -7,7 +7,8 @@
 data_missingness_table(
   db_name = NULL,
   db_dir = "station_data",
-  output_dir = "station_data"
+  output_dir = "station_data",
+  output_name = NULL
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ data_missingness_table(
 \item{db_dir}{Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
 
 \item{output_dir}{Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+
+\item{output_name}{Character: The name of the output file. If left unfilled, the function will name the file "db_name_missingness_table.html"}
 }
 \value{
 An `.html` output table that stores the expected, account, and percent missing counts for each variable.

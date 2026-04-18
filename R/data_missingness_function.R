@@ -5,12 +5,14 @@
 #' @param db_name Character: The name of the database
 #' @param db_dir Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".
 #' @param output_dir Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param output_name Character: The name of the output file. If left unfilled, the function will name the file "db_name_missingness_table.html"
 #'
 #' @return An `.html` output table that stores the expected, account, and percent missing counts for each variable.
 #'
 #' @export
-data_missingness_table <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data") {
+data_missingness_table <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL) {
   db_name_clean <- gsub(" ", "_", toupper(db_name))
+  output_name_clean <- gsub(" ", "_", toupper(output_name))
 
   db_path <- file.path(db_dir, paste0(db_name_clean, ".sqlite"))
 
@@ -70,7 +72,14 @@ data_missingness_table <- function(db_name = NULL, db_dir = "station_data", outp
                                                                     list(extend = 'csv', title = paste0(db_name_clean, "_Data_Missingness")),
                                                                     list(extend = 'pdf', title = paste0(db_name_clean, "_Data_Missingness")))))
 
-    output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_missingness_table.html"))
+    output_path <- file.path(getwd(), output_dir, paste0(db_name_clean, "_outputs"))
+    if (!dir.exists(output_path )) dir.create(output_path , recursive = TRUE)
+
+    if (is.null(output_name)) {
+      output_file <- file.path(output_path, paste0(db_name_clean, "_missingness_table.html"))
+    } else {
+      output_file <- file.path(output_path, paste0(output_name_clean, ".html"))
+    }
 
     tmp_dir <- tempdir()
     tmp_file <- file.path(tmp_dir, "temp_table.html")
