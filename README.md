@@ -198,7 +198,8 @@ missing data for each variable in each station.
 ```r
 data_missingness_table(db_name =  "BC_station_data",
                        db_dir = "castform_outputs",
-                       output_dir = "castform_outputs")
+                       output_dir = "castform_outputs"
+                       output_name = "BC_data_missingness",)
 ```
 
 #### Data Ranges
@@ -209,7 +210,8 @@ in each station.
 ```r
 data_ranges(db_name =  "BC_station_data",
             db_dir = "castform_outputs",
-            output_dir = "castform_outputs")
+            output_dir = "castform_outputs"
+            output_name = "BC_data_ranges,)
 ```
 
 #### Yearly Means
@@ -220,7 +222,8 @@ is available)
 ```r
 plot_yearly_means(db_name =  "BC_station_data",
                   db_dir = "castform_outputs",
-                  output_dir = "castform_outputs")
+                  output_dir = "castform_outputs,
+                  output_name = "BC_yearly_means",")
 ```
 
 #### Missing Strings
@@ -230,7 +233,8 @@ Creates a table identifying when data is missing.
 ```r
 pull_missing_strings(db_name =  "BC_station_data",
                      db_dir = "castform_outputs",
-                     output_dir = "castform_outputs")
+                     output_dir = "castform_outputs
+                     output_name = "BC_missing_strings",")
 ```
 
 #### Repeated Strings
@@ -245,7 +249,8 @@ require zooming into plots to see outputs or else the plot will look empty.
 ```r
 pull_repeated_strings(db_name =  "BC_station_data",
                      db_dir = "castform_outputs",
-                     output_dir = "castform_outputs")
+                     output_dir = "castform_outputs",
+                     output_name = "BC_repeated_strings",)
 ```
 
 ### Heat Wave Detector
