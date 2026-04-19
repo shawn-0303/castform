@@ -4,11 +4,11 @@
 #'
 #' @param db_name Character: The name of the database
 #' @param HLY_station_info Station metadata
-#' @param output_dir The created output directory of the database. If left unchanged, will store the database within the default root_folder
+#' @param out_dir The created output directory of the database. If left unchanged, will store the database within the default root_folder
 #' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #'
 #' @export
-build_station_database <- function(db_name = NULL, HLY_station_info = NULL, output_dir = "station_data", root_folder = "station_data") {
+build_station_database <- function(db_name = NULL, HLY_station_info = NULL, out_dir = "station_data", root_folder = "station_data") {
   progressr::handlers(global = TRUE)
   progressr::handlers("progress")
 
@@ -26,8 +26,8 @@ build_station_database <- function(db_name = NULL, HLY_station_info = NULL, outp
 
   db_name_clean <- gsub(" ", "_", toupper(db_name))
 
-  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
-  db_path <- file.path(output_dir, paste0(db_name_clean, ".sqlite"))
+  if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
+  db_path <- file.path(out_dir, paste0(db_name_clean, ".sqlite"))
   if (file.exists(db_path)) file.remove(db_path)
 
   con <- DBI::dbConnect(RSQLite::SQLite(), dbname = db_path)

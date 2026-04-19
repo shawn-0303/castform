@@ -6,11 +6,12 @@
 #' @param db_dir The directory of the database, If left unchanged, will default to package's default created directory "station_data".
 #' @param output_dir The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #' @param output_name Character: The name of the output file. If left unfilled, the function will name the file "db_name_missingness_table.html"
+#' @param write_csv Logical: If TRUE prints a csv copy of the results
 #'
 #' @return a `.html` output table and plot that stores the length of the repeat (in hours) as well as the start and end date/time. Large amounts of data mayt take longer to load and require users to zoom into the plot to see points.
 #'
 #' @export
-pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL) {
+pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL, write_csv = FALSE) {
   db_name_clean <- gsub(" ", "_", toupper(db_name))
   output_name_clean <- gsub(" ", "_", toupper(output_name))
 
@@ -20,49 +21,63 @@ pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", outpu
     con <- DBI::dbConnect(RSQLite::SQLite(), dbname = db_path)
     on.exit(DBI::dbDisconnect(con))
 
-    message("Querying stations in database...")
-    stations_in_database <- DBI::dbGetQuery(con,
-                                            "SELECT DISTINCT Station_Name, Station_ID
-                                       FROM Station
-                                       ORDER BY rowid")
-
     vars <- c("Temp_C", "Dew_Point_C", "Rel_Hum", "Precip_Amount", "Wind_Dir_deg",
               "Wind_Spd_kmh", "Visibility_km", "Stn_Press_kPa", "Hmdx", "Wind_Chill")
 
-    query_script <- paste0("SELECT Station_ID, Year, Month, Day, Time_LST,
-                            Temp_C, Dew_Point_C, Rel_Hum, Precip_Amount, Wind_Dir_deg,
-                            Wind_Spd_kmh, Visibility_km, Stn_Press_kPa, Hmdx, Wind_Chill
-                           FROM Observation")
+    all_streaks <- list()
 
-    message("Querying data ranges...")
-    query_results <- DBI::dbGetQuery(con, query_script)
+    for (v in vars) {
+      message("Finding repeated strings in ", v, "...")
 
-    message("Finding repeated strings...")
-    data_range_long <- query_results |>
-      dplyr::left_join(stations_in_database, by = c("Station_ID")) |>
-      tidyr::pivot_longer(cols = vars,
-                          names_to = "Variable",
-                          values_to = "Value") |>
-      dplyr::mutate(Station_Name = as.factor(Station_Name),
-                    Variable = as.factor(Variable)) |>
-      dplyr::filter(!is.na(Value)) |>
-      dplyr::group_by(Station_ID, Variable) |>
-      dplyr::mutate(time_val = lubridate::ymd_hm(paste(Year, Month, Day, Time_LST)),
-                    val_change = Value != dplyr::lag(Value),
-                    time_diff = as.numeric(difftime(time_val, dplyr::lag(time_val), units = "hours")) > 1,
-                    new_streak = dplyr::if_else(is.na(val_change) | val_change | time_diff, 1, 0),
-                    streak_id = cumsum(new_streak)) |>
-      dplyr::group_by(Station_Name, Station_ID, Variable, Value, streak_id) |>
-      dplyr::summarise(Streak_Length_Hours  =  dplyr::n(),
-                       Start_Time  = min(time_val),
-                       End_Time = max(time_val),
-                       .groups = "drop") |>
-      dplyr::filter(Streak_Length_Hours >= 3) |>
+      # This SQL script:
+      # 1. Identifies if the current value is different from the previous row
+      # 2. Creates a 'streak_id' that increments every time a value changes
+      # 3. Groups by that ID to count the length
+      sql_query <- paste0("
+      WITH RankedData AS (
+        SELECT
+          Station_ID,
+          Year || '-' || printf('%02d', Month) || '-' || printf('%02d', Day) || ' ' || Time_LST AS Timestamp,
+          ", v, " AS Value,
+          LAG(", v, ") OVER (PARTITION BY Station_ID ORDER BY Year, Month, Day, Time_LST) AS PrevValue
+        FROM Observation
+        WHERE ", v, " IS NOT NULL
+      ),
+      StreakGroups AS (
+        SELECT *,
+          SUM(CASE WHEN Value = PrevValue THEN 0 ELSE 1 END)
+            OVER (PARTITION BY Station_ID ORDER BY Timestamp) AS StreakID
+        FROM RankedData
+      )
+      SELECT
+        Station_ID,
+        '", v, "' AS Variable,
+        Value AS Repeated_Value,
+        COUNT(*) AS Streak_Length_Hours,
+        MIN(Timestamp) AS Start_Time,
+        MAX(Timestamp) AS End_Time
+      FROM StreakGroups
+      GROUP BY Station_ID, StreakID
+      HAVING Streak_Length_Hours >= 3
+    ")
+
+      all_streaks[[v]] <- DBI::dbGetQuery(con, sql_query)
+    }
+
+    final_df <- all_streaks %>%
+      purrr::keep(~nrow(.x) > 0) %>%
+      dplyr::bind_rows()
+
+    if(nrow(final_df) == 0) return(message("No streaks found."))
+
+    stations <- DBI::dbGetQuery(con, "SELECT Station_ID, Station_Name FROM Station")
+    final_df <- final_df %>%
+      dplyr::left_join(stations, by = "Station_ID") %>%
       dplyr::select("Station Name" = Station_Name,
                     "Station ID" = Station_ID,
                     Variable,
-                    "Repeated Value" = Value,
-                    "Streak Length (Hours)" = Streak_Length_Hours,
+                    "Repeated Value" = Repeated_Value,
+                    "Length of Strek (Hours)" = Streak_Length_Hours,
                     "Streak Start Time" = Start_Time,
                     "Streak End Time" = End_Time)
 
@@ -70,7 +85,7 @@ pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", outpu
     message("Formatting table...")
     table_title_name <- gsub("_", " ", toupper(db_name_clean))
 
-    data_range_table <- DT::datatable(data_range_long,
+    repeated_strings_table <- DT::datatable(final_df,
                                       caption = htmltools::tags$caption(style = 'caption-side: top; text-align: center; color:black; font-size:250%;',
                                                                         paste0(table_title_name, " Repeated Strings")),
                                       filter = list(position = 'top', clear = FALSE, plain = TRUE),
@@ -95,7 +110,7 @@ pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", outpu
     tmp_file <- file.path(tmp_dir, "temp_table.html")
 
     message("Saving self-contained HTML table...")
-    htmlwidgets::saveWidget(data_range_table, file = tmp_file, selfcontained = TRUE)
+    htmlwidgets::saveWidget(repeated_strings_table, file = tmp_file, selfcontained = TRUE)
 
     file.copy(tmp_file, table_output_file, overwrite = TRUE)
 
@@ -104,9 +119,22 @@ pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", outpu
 
     message("Repeated strings table saved to: ", table_output_file)
 
+    if (write_csv == TRUE) {
+      message("Writing data to csv....")
+
+      if (is.null(output_name)) {
+        csv_output_file <- file.path(output_path, paste0(db_name_clean, "_repeated_strings_table.csv"))
+      } else {
+        csv_output_file <- file.path(output_path, paste0(output_name_clean, "_table.csv"))
+      }
+
+      write.csv(final_df, file = csv_output_file)
+      message("Repeated strings csv saved to: ", csv_output_file)
+    }
+
     message("Formatting plot...")
 
-    shared_data <- crosstalk::SharedData$new(data_range_long)
+    shared_data <- crosstalk::SharedData$new(final_df)
 
     station_filter <- crosstalk::filter_select(
       id = "station_selector",
@@ -118,8 +146,8 @@ pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", outpu
     # Gantt-style plot
     interactive_plot <- plotly::plot_ly(shared_data) %>%
       plotly::add_segments(
-        x = ~`Streak Start Time`,
-        xend = ~`Streak End Time`,
+        x = ~as.POSIXct(`Streak Start Time`),      # 👈 Force to Date/Time object
+        xend = ~as.POSIXct(`Streak End Time`),
         y = ~paste(`Station Name`, Variable),
         yend = ~paste(`Station Name`, Variable),
         color = ~Variable,
@@ -127,7 +155,9 @@ pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", outpu
       ) %>%
       plotly::layout(
         title = "Repeated String Timeline",
-        xaxis = list(title = "Date"),
+        xaxis = list(title = "Date",
+                     tickformat = "%Y",
+                     dtick = "M12"),
         yaxis = list(title = ""),
         margin = list(l = 150)
       )
@@ -151,6 +181,8 @@ pull_repeated_strings <- function(db_name = NULL, db_dir = "station_data", outpu
     htmltools::save_html(final_content, file = plot_output_file)
 
     message("Repeated strings plot saved to: ", plot_output_file)
+
+    return(interactive_plot)
 
   } else {
     message("Database not found. Please double check the entered database name, the database directory, and ensure the build_station_database function finished successfully.")

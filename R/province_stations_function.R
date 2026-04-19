@@ -6,7 +6,7 @@
 #' @param year Numeric Integer: The year of the data pull. If left empty, will default to downloading all years with hourly data for that particular station.
 #' @param month Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to downloading data for all months (1-12).
 #' @param parallel_threshold Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.
-#' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param out_dir The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #' @param HLY_station_info Dataframe: Station metadata
 #'
 #' @importFrom future plan multisession sequential
@@ -16,12 +16,12 @@
 #' @importFrom utils download.file
 #'
 #' @export
-province_station_files <- function(province = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data", HLY_station_info = NULL) {
+province_station_files <- function(province = NULL, year = NULL, month = NULL, parallel_threshold = 50, out_dir = "station_data", HLY_station_info = NULL) {
   progressr::handlers(global = TRUE)
   progressr::handlers("progress")
 
-  if(!dir.exists(root_folder))
-    dir.create(root_folder, recursive = TRUE)
+  if(!dir.exists(out_dir))
+    dir.create(out_dir, recursive = TRUE)
 
   # No metadata provided
   if (is.null(HLY_station_info)) {
@@ -63,8 +63,10 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
   if (is.null(year) || is.na(year)) {
     year_min <- min(province_subset$HLY.First.Year, na.rm = TRUE)
     year_max <- max(province_subset$HLY.Last.Year, na.rm = TRUE)
-    year <- seq(year_min, year_max)
+    year_pull <- seq(year_min, year_max)
     message(sprintf("No year provided. Downloading all available records: %d to %d", year_min, year_max))
+  } else {
+    year_pull <- year
   }
 
   # Character year provided
@@ -73,47 +75,41 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
     return(NULL)
   }
 
+  # Month Clean Up
   if (is.null(month) || is.na(month)) {
-    month <- 1:12
     message("No month provided. Downloading all months (1-12).")
+    month_pull <- 1:12
   } else {
-    # Existing month cleaning logic for single/specific months
     month_clean <- tolower(trimws(as.character(month)))
     if (month_clean %in% tolower(month.name)) {
-      month <- match(month_clean, tolower(month.name))
+      month_pull <- match(month_clean, tolower(month.name))
     } else if (month_clean %in% tolower(month.abb)) {
-      month <- match(month_clean, tolower(month.abb))
-    }
-    month <- as.numeric(month)
-    if (any(is.na(month)) || any(month < 1) || any(month > 12)) {
-      message("Invalid month input. Defaulting to January (1).")
-      month <- 1
+      month_pull <- match(month_clean, tolower(month.abb))
+    } else {
+      month_pull <- as.numeric(month)
     }
   }
 
-  province_matches <- HLY_station_info[HLY_station_info$Province == province &
-                                         HLY_station_info$HLY.First.Year <= max(year) &
-                                         HLY_station_info$HLY.Last.Year >= min(year), ]
+  task_list <- tidyr::expand_grid(
+    province_subset,
+    year         = year_pull,
+    month        = month_pull
+  )
 
-  province_station_count <- nrow(province_matches)
-  if (province_station_count == 0) {
-    message(paste("No active hourly stations found in", province, "for the year", year))
+  task_list <- task_list[task_list$year >= task_list$HLY.First.Year &
+                           task_list$year <= task_list$HLY.Last.Year, ]
+
+  total_files <- nrow(task_list)
+
+  if (total_files == 0) {
+    message("No active stations found for the requested timeframe.")
     return(NULL)
   }
 
-  message(paste("Found", province_station_count, "stations in", province, ". Starting download..."))
-
-  stations_to_download <- data.frame(station_name = province_matches$stationName,
-                                     station_id   = province_matches$Station.ID)
-
-  task_list <- tidyr::expand_grid(
-    stations_to_download,
-    year         = year,
-    month        = month
-  )
-
-  total_files <- nrow(task_list)
   file_province_name <- gsub(" ", "_", toupper(province))
+
+  task_list$station_name <- task_list$stationName
+  task_list$station_id   <- task_list$Station.ID
 
   total_bytes <- total_files * 130000
   est_size_mb <- total_bytes / (1024 ^ 2)
@@ -155,7 +151,7 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
                               station_id = station_id,
                               year = year,
                               month = month,
-                              root_folder = root_folder,
+                              out_dir = out_dir,
                               HLY_station_info = HLY_station_info)
     }, .options = furrr_options(seed = TRUE))
 
@@ -171,7 +167,7 @@ province_station_files <- function(province = NULL, year = NULL, month = NULL, p
                               station_id = station_id,
                               year = year,
                               month = month,
-                              root_folder = root_folder,
+                              out_dir = out_dir,
                               HLY_station_info = HLY_station_info)
     })
   }

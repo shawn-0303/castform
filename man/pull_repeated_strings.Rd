@@ -8,7 +8,8 @@ pull_repeated_strings(
   db_name = NULL,
   db_dir = "station_data",
   output_dir = "station_data",
-  output_name = NULL
+  output_name = NULL,
+  write_csv = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ pull_repeated_strings(
 \item{output_dir}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
 
 \item{output_name}{Character: The name of the output file. If left unfilled, the function will name the file "db_name_missingness_table.html"}
+
+\item{write_csv}{Logical: If TRUE prints a csv copy of the results}
 }
 \value{
 a `.html` output table and plot that stores the length of the repeat (in hours) as well as the start and end date/time. Large amounts of data mayt take longer to load and require users to zoom into the plot to see points.

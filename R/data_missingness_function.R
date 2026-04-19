@@ -6,11 +6,12 @@
 #' @param db_dir Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".
 #' @param output_dir Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #' @param output_name Character: The name of the output file. If left unfilled, the function will name the file "db_name_missingness_table.html"
+#' @param write_csv Logical: If TRUE prints a csv copy of the results
 #'
 #' @return An `.html` output table that stores the expected, account, and percent missing counts for each variable.
 #'
 #' @export
-data_missingness_table <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL) {
+data_missingness_table <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL, write_csv = FALSE) {
   db_name_clean <- gsub(" ", "_", toupper(db_name))
   output_name_clean <- gsub(" ", "_", toupper(output_name))
 
@@ -93,6 +94,21 @@ data_missingness_table <- function(db_name = NULL, db_dir = "station_data", outp
     if (dir.exists(dep_dir)) unlink(dep_dir, recursive = TRUE)
 
     message("Data missingness table saved to: ", output_file)
+
+    if (write_csv == TRUE) {
+      message("Writing data to csv....")
+
+      if (is.null(output_name)) {
+        csv_output_file <- file.path(output_path, paste0(db_name_clean, "_missingness_table.csv"))
+      } else {
+        csv_output_file <- file.path(output_path, paste0(output_name_clean, "_table.csv"))
+      }
+
+      write.csv(missingness_long, file = csv_output_file)
+      message("Repeated strings csv saved to: ", csv_output_file)
+    }
+
+    return(missingness_table)
   } else {
     message("Database not found. Please double check the entered database name, the database directory, and ensure the build_station_database function finished successfully.")
   }

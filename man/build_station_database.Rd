@@ -7,7 +7,7 @@
 build_station_database(
   db_name = NULL,
   HLY_station_info = NULL,
-  output_dir = "station_data",
+  out_dir = "station_data",
   root_folder = "station_data"
 )
 }
@@ -16,7 +16,7 @@ build_station_database(
 
 \item{HLY_station_info}{Station metadata}
 
-\item{output_dir}{The created output directory of the database. If left unchanged, will store the database within the default root_folder}
+\item{out_dir}{The created output directory of the database. If left unchanged, will store the database within the default root_folder}
 
 \item{root_folder}{The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
 }

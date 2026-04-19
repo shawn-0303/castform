@@ -486,8 +486,8 @@ if (nrow(region_matches) == 0) {
   prov_boundaries <- canadianmaps::PROV
   station_sf <- sf::st_transform(station_sf, sf::st_crs(prov_boundaries))
 
-  graphics::par(mar = c(0,0,0,0))
   grDevices::png(file_path, width = 2000, height = 1600, res = 300)
+  graphics::par(mar = c(0,0,0,0))
   grDevices::dev.control("enable")
 
   graphics::plot(sf::st_geometry(prov_boundaries),

@@ -2,13 +2,13 @@
 #'
 #' Downloads all Environment Canada data from all stations with hourly data available.
 #'
-#' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param out_dir The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #' @param HLY_station_info Dataframe: Station metadata
 #'
 #' @importFrom utils download.file
 #'
 #' @export
-get_all_files <- function(root_folder = "station_data", HLY_station_info = NULL) {
+get_all_files <- function(out_dir = "station_data", HLY_station_info = NULL) {
   progressr::handlers(global = TRUE)
   progressr::handlers("progress")
 
@@ -73,7 +73,7 @@ get_all_files <- function(root_folder = "station_data", HLY_station_info = NULL)
       if (begin_year > end_year) next
 
     # Create download directory if one doesn't exist
-      station_downloads <- file.path(root_folder, province, paste0(station_name, "_", station_id), begin_year)
+      station_downloads <- file.path(out_dir, province, paste0(station_name, "_", station_id), begin_year)
       if (!dir.exists(station_downloads)) dir.create(station_downloads, recursive = TRUE)
 
       for (year in begin_year:end_year) {

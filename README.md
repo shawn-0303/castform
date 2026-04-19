@@ -230,6 +230,8 @@ plot_yearly_means(db_name =  "BC_station_data",
 
 Creates a table identifying when data is missing. 
 
+**NOTE:** This will take longer to run on larger datasets.
+
 ```r
 pull_missing_strings(db_name =  "BC_station_data",
                      db_dir = "castform_outputs",

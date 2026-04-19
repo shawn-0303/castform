@@ -10,6 +10,7 @@ get_metadata <- function() {
                            paste0("station_inventory_", current_date, ".csv"))
 
   rda_destination <- file.path("data",
+                               "past_inventories",
                                paste0("station_inventory_", current_date, ".rda"))
 
   working_file_destination <- file.path("data",
@@ -18,6 +19,7 @@ get_metadata <- function() {
 
   if (!dir.exists("inst/extdata")) dir.create("inst/extdata", recursive = TRUE)
   if (!dir.exists("data")) dir.create("data", recursive = TRUE)
+  if (!dir.exists("data/past_inventories")) dir.create("data/past_inventories", recursive = TRUE)
 
   url <- paste("https://collaboration.cmc.ec.gc.ca/cmc/climate/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv")
 

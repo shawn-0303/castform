@@ -9,3 +9,4 @@ inst/doc
 *.Rproj
 
 station_data/
+castform_outputs/

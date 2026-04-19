@@ -7,11 +7,12 @@
 #' @param min_threshold Numeric: Minimum temperature threshold for an extreme heat event
 #' @param db_dir Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".
 #' @param output_dir Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param write_csv Logical: If TRUE prints a csv copy of the results
 #'
 #' @return Produces a `.html` table and plot output summarizing average daily temperatures and flags extreme heat events based on user input thresholds.
 #'
 #' @export
-heatwave_detector <- function(db_name = NULL, max_threshold = NULL, min_threshold = NULL, db_dir = "station_data", output_dir = "station_data") {
+heatwave_detector <- function(db_name = NULL, max_threshold = NULL, min_threshold = NULL, db_dir = "station_data", output_dir = "station_data", write_csv = FALSE) {
   db_name_clean <- gsub(" ", "_", toupper(db_name))
 
   db_path <- file.path(db_dir, paste0(db_name_clean, ".sqlite"))
@@ -84,7 +85,10 @@ heatwave_detector <- function(db_name = NULL, max_threshold = NULL, min_threshol
                                                                     list(extend = 'csv', title = paste0(db_name_clean, "_heatwave_detector")),
                                                                     list(extend = 'pdf', title = paste0(db_name_clean, "_heatwave_detector")))))
 
-    table_output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_heatwave_table.html"))
+    output_path <- file.path(getwd(), output_dir, paste0(db_name_clean, "_outputs"))
+    if (!dir.exists(output_path )) dir.create(output_path , recursive = TRUE)
+
+    table_output_file <- file.path(output_path, paste0(db_name_clean, "_heatwave_table.html"))
 
     tmp_dir <- tempdir()
     tmp_file <- file.path(tmp_dir, "temp_table.html")
@@ -98,6 +102,15 @@ heatwave_detector <- function(db_name = NULL, max_threshold = NULL, min_threshol
     if (dir.exists(dep_dir)) unlink(dep_dir, recursive = TRUE)
 
     message("Heatwave table saved to: ", table_output_file)
+
+    if (write_csv == TRUE) {
+      message("Writing data to csv....")
+
+      csv_output_file <- file.path(output_path, paste0(db_name_clean, "_heatwave_table.csv"))
+      write.csv(heatwave, file = csv_output_file)
+
+      message("Heatwave csv saved to: ", csv_output_file)
+    }
 
     message("Building plot...")
 
@@ -117,7 +130,8 @@ heatwave_detector <- function(db_name = NULL, max_threshold = NULL, min_threshol
       plotly::add_bars(y = ~ifelse(`Heatwave Indicator` == 1, 65, 0),
                        base = -30,
                        width = 86400000,
-                       marker = list(color = 'rgba(255, 0, 0, 0.2)',
+                       marker = list(color = 'red',
+                                     alpha = 0.8,
                                      line = list(width = 0)),
                        name = "Heatwave Event",
                        hoverinfo = "none") |>
@@ -139,12 +153,14 @@ heatwave_detector <- function(db_name = NULL, max_threshold = NULL, min_threshol
       interactive_plot
     )
 
-    output_file <- file.path(getwd(), output_dir, paste0(db_name_clean, "_heatwave_plot.html"))
+    output_file <- file.path(output_path, paste0(db_name_clean, "_heatwave_plot.html"))
 
     message("Saving HTML plot...")
     htmltools::save_html(final_html, file = output_file)
 
     message("Heatwaves plot saved to: ", output_file)
+
+    return(interactive_plot)
   } else {
     message("Database not found. Please double check the entered database name, the database directory, and ensure the build_station_database function finished successfully.")
   }

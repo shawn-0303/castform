@@ -8,7 +8,8 @@ pull_missing_strings(
   db_name = NULL,
   db_dir = "station_data",
   output_dir = "station_data",
-  output_name = NULL
+  output_name = NULL,
+  write_csv = FALSE
 )
 }
 \arguments{

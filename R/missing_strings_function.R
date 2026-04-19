@@ -10,7 +10,7 @@
 #' @return A `.html` output table and plot that displays the length of the data gap (in hours) as well as the start and end date/time.
 #'
 #' @export
-pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL) {
+pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL, write_csv = FALSE) {
   db_name_clean <- gsub(" ", "_", toupper(db_name))
   output_name_clean <- gsub(" ", "_", toupper(output_name))
 
@@ -38,7 +38,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     query_results <- DBI::dbGetQuery(con, query_script)
 
     message("Finding missing strings...")
-    data_range_long <- query_results |>
+    missing_strings_long <- query_results |>
       dplyr::left_join(stations_in_database, by = c("Station_ID")) |>
       tidyr::pivot_longer(cols = vars,
                           names_to = "Variable",
@@ -60,7 +60,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
 
     table_title_name <- gsub("_", " ", toupper(db_name_clean))
 
-    data_range_table <- DT::datatable(data_range_long,
+    missing_strings_table <- DT::datatable(missing_strings_long,
                                       caption = htmltools::tags$caption(style = 'caption-side: top; text-align: center; color:black; font-size:250%;',
                                                                         paste0(table_title_name, " Missing Strings")),
                                       filter = list(position = 'top', clear = FALSE, plain = TRUE),
@@ -85,7 +85,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     tmp_file <- file.path(tmp_dir, "temp_table.html")
 
     message("Saving self-contained HTML table...")
-    htmlwidgets::saveWidget(data_range_table, file = tmp_file, selfcontained = TRUE)
+    htmlwidgets::saveWidget(missing_strings_table, file = tmp_file, selfcontained = TRUE)
 
     file.copy(tmp_file, table_output_file, overwrite = TRUE)
 
@@ -94,9 +94,22 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
 
     message("Missing strings table saved to: ", table_output_file)
 
+    if (write_csv == TRUE) {
+      message("Writing data to csv....")
+
+      if (is.null(output_name)) {
+        csv_output_file <- file.path(output_path, paste0(db_name_clean, "_missing_strings_table.csv"))
+      } else {
+        csv_output_file <- file.path(output_path, paste0(output_name_clean, "_table.csv"))
+      }
+
+      write.csv(missing_strings_long, file = csv_output_file)
+      message("Repeated strings csv saved to: ", csv_output_file)
+    }
+
     message("Formatting plot...")
 
-    shared_data <- crosstalk::SharedData$new(data_range_long)
+    shared_data <- crosstalk::SharedData$new(missing_strings_long)
 
     station_filter <- crosstalk::filter_select(
       id = "station_selector",
@@ -106,7 +119,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     )
 
     # Gantt-style plot
-    interactive_plot <- plotly::plot_ly(shared_data) %>%
+    interactive_plot <- plotly::plot_ly(shared_data) |>
       plotly::add_segments(
         x = ~`Streak Start Time`,
         xend = ~`Streak End Time`,
@@ -114,7 +127,7 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
         yend = ~paste(Station_Name, Variable),
         color = ~Variable,
         line = list(width = 15)
-      ) %>%
+      ) |>
       plotly::layout(
         title = "Missing String Timeline",
         xaxis = list(title = "Date"),
@@ -139,6 +152,8 @@ pull_missing_strings <- function(db_name = NULL, db_dir = "station_data", output
     # Use save_html instead of saveWidget to avoid the 'symbol/0' error
     # This correctly handles tag lists (filter + plot)
     htmltools::save_html(final_content, file = plot_output_file)
+
+    return(interactive_plot)
 
     message("Repeated strings plot saved to: ", plot_output_file)
   } else {

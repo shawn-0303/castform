@@ -16,12 +16,12 @@
 #' @importFrom utils download.file
 #'
 #' @export
-year_range_station_files <- function(station_name = NULL, station_id = NULL, start_year = NULL, end_year = NULL, parallel_threshold = 50, root_folder = "station_data", HLY_station_info = NULL) {
+year_range_station_files <- function(station_name = NULL, station_id = NULL, start_year = NULL, end_year = NULL, parallel_threshold = 50, out_dir = "station_data", HLY_station_info = NULL) {
   progressr::handlers(global = TRUE)
   progressr::handlers("progress")
 
-  if(!dir.exists(root_folder))
-    dir.create(root_folder, recursive = TRUE)
+  if(!dir.exists(out_dir))
+    dir.create(out_dir, recursive = TRUE)
 
   # No metadata provided
   if (is.null(HLY_station_info)) {
@@ -143,7 +143,7 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder,
+                              out_dir = out_dir,
                               HLY_station_info = HLY_station_info)
     }, .options = furrr_options(seed = TRUE))
 
@@ -161,7 +161,7 @@ year_range_station_files <- function(station_name = NULL, station_id = NULL, sta
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder,
+                              out_dir = out_dir,
                               HLY_station_info = HLY_station_info)
     })
   }

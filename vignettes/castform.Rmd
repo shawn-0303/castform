@@ -359,6 +359,8 @@ table to identify when data is missing and stores the length (in hours), as well
 the start and end date/time for each gap. It will also create an interactive plot 
 to visualize these gaps 
 
+**NOTE:** This will take longer to run on larger datasets.
+
 ```{r missing_strings, eval=FALSE}
 pull_missing_strings(db_name =  "BC_STATION_DATA")
 ```

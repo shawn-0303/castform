@@ -6,11 +6,12 @@
 #' @param db_dir Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".
 #' @param output_dir Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #' @param output_name Character: The name of the output file. If left unfilled, the function will name the file "db_name_missingness_table.html"
+#' @param write_csv Logical: If TRUE prints a csv copy of the results
 #'
 #' @return An `.html` output line plot visualizing the data.
 #'
 #' @export
-plot_yearly_means <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL) {
+plot_yearly_means <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL, write_csv = FALSE) {
   db_name_clean <- gsub(" ", "_", toupper(db_name))
   output_name_clean <- gsub(" ", "_", toupper(output_name))
 
@@ -55,6 +56,22 @@ plot_yearly_means <- function(db_name = NULL, db_dir = "station_data", output_di
                           values_to = "Average") |>
       dplyr::mutate(Variable = gsub("avg_", "", Variable))
 
+    output_path <- file.path(getwd(), output_dir, paste0(db_name_clean, "_outputs"))
+    if (!dir.exists(output_path )) dir.create(output_path , recursive = TRUE)
+
+    if (write_csv == TRUE) {
+      message("Writing data to csv....")
+
+      if (is.null(output_name)) {
+        csv_output_file <- file.path(output_path, paste0(db_name_clean, "_yearly_means_table.csv"))
+      } else {
+        csv_output_file <- file.path(output_path, paste0(output_name_clean, "_table.csv"))
+      }
+
+      write.csv(yearly_means, file = csv_output_file)
+      message("Repeated strings csv saved to: ", csv_output_file)
+    }
+
     message("Building plot...")
 
     shared_data <- crosstalk::SharedData$new(yearly_means_long)
@@ -86,9 +103,6 @@ plot_yearly_means <- function(db_name = NULL, db_dir = "station_data", output_di
       interactive_plot
     )
 
-    output_path <- file.path(getwd(), output_dir, paste0(db_name_clean, "_outputs"))
-    if (!dir.exists(output_path )) dir.create(output_path , recursive = TRUE)
-
     if (is.null(output_name)) {
       output_file <- file.path(output_path, paste0(db_name_clean, "_yearly_means_plot.html"))
     } else {
@@ -99,6 +113,7 @@ plot_yearly_means <- function(db_name = NULL, db_dir = "station_data", output_di
     htmltools::save_html(final_html, file = output_file)
 
     message("Yearly means plot saved to: ", output_file)
+    return(interactive_plot)
   } else {
     message("Database not found. Please double check the entered database name, the database directory, and ensure the build_station_database function finished successfully.")
   }

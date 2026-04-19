@@ -9,7 +9,8 @@ heatwave_detector(
   max_threshold = NULL,
   min_threshold = NULL,
   db_dir = "station_data",
-  output_dir = "station_data"
+  output_dir = "station_data",
+  write_csv = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ heatwave_detector(
 \item{db_dir}{Character: The directory of the database, If left unchanged, will default to package's default created directory "station_data".}
 
 \item{output_dir}{Character: The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.}
+
+\item{write_csv}{Logical: If TRUE prints a csv copy of the results}
 }
 \value{
 Produces a `.html` table and plot output summarizing average daily temperatures and flags extreme heat events based on user input thresholds.

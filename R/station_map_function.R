@@ -13,20 +13,14 @@
 #' @export
 station_map <- function(db_name = NULL, db_dir = "station_data", output_dir = "station_data", output_name = NULL, metadata_stations = FALSE) {
   db_name_clean <- if (!is.null(db_name)) gsub(" ", "_", toupper(db_name)) else "NULL"
+  output_name_clean <- if (!is.null(output_name)) gsub(" ", "_", toupper(output_name)) else paste0(db_name_clean, "_STATION_MAP")
+
+  output_path <- file.path(getwd(), output_dir, paste0(db_name_clean, "_outputs"))
+  if (!dir.exists(output_path )) dir.create(output_path , recursive = TRUE)
+
+  output_file <- file.path(output_path, paste0(output_name_clean, ".png"))
 
   db_path <- file.path(db_dir, paste0(db_name_clean, ".sqlite"))
-
-  if (metadata_stations == TRUE && !is.na(db_name)) {
-    message("Please either provide a database or create a database wide map. Function cannot do both at once")
-    return(invisible(NULL))
-  }
-
-  if (is.null(output_name) || is.na(output_name)) {
-    message("Please provide an output name")
-    return(invisible(NULL))
-  } else {
-    output_name <- gsub(" ", "_", toupper(output_name))
-  }
 
   if (metadata_stations == TRUE) {
     if (exists("HLY_station_info", envir = .GlobalEnv)) {
@@ -36,10 +30,9 @@ station_map <- function(db_name = NULL, db_dir = "station_data", output_dir = "s
     }
 
     message("Mapping metadata stations...")
-    file_path <- file.path(output_dir, paste0(output_name, ".png"))
-    metadata_station_env <- .mapping(input_df = HLY_station_info, file_path = file_path)
+    metadata_station_env <- .mapping(input_df = HLY_station_info, file_path = output_file)
 
-    message("Metadata station map successfully saved to: ", file_path)
+    message("Metadata station map successfully saved to: ", output_file)
   }
 
   else if (file.exists(db_path) && metadata_stations == FALSE) {
@@ -56,11 +49,10 @@ station_map <- function(db_name = NULL, db_dir = "station_data", output_dir = "s
       return(NULL)
     }
 
-    message("Mapping observation stations...")
-    file_path <- file.path(output_dir, paste0(output_name, ".png"))
-    observation_station_env <- .mapping(input_df = observation_stations, file_path = file_path)
+    message("Mapping metadata stations...")
+    observation_station_env <- .mapping(input_df = observation_stations, file_path = output_file)
 
-    message("Observation station map successfully saved to: ", file_path)
+    message("Observation station map successfully saved to: ", output_file)
   } else {
     message("Database not found. Please double check the entered database name, the database directory, and ensure the build_station_database function finished successfully.")
   }

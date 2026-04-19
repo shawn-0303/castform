@@ -6,14 +6,14 @@
 #' @param station_id Numeric Integer: The unique station ID of the weather station of interest.
 #' @param year Numeric Integer: The year of the data pull. If left empty, will default to the first year for data collection for that particular station.
 #' @param month Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to January (1).
-#' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param out_dir The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #' @param HLY_station_info Dataframe: Station metadata
 #'
 #' @export
-get_single_station_file <- function(station_name = NULL, station_id = NULL, year = NULL, month = NULL, root_folder = "station_data", HLY_station_info = NULL) {
+get_single_station_file <- function(station_name = NULL, station_id = NULL, year = NULL, month = NULL, out_dir = "station_data", HLY_station_info = NULL) {
 
-  if(!dir.exists(root_folder))
-    dir.create(root_folder, recursive = TRUE)
+  if(!dir.exists(out_dir))
+    dir.create(out_dir, recursive = TRUE)
 
   # No metadata provided
   if (is.null(HLY_station_info)) {
@@ -107,7 +107,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
   provinces <- gsub(" ", "_", toupper(valid_matches$Province[1]))
 
   file_station_name <- gsub(" ", "_", toupper(station_name))
-  station_path  <- file.path(root_folder, provinces, paste0(file_station_name, "_", station_id), as.character(year))
+  station_path  <- file.path(out_dir, provinces, paste0(file_station_name, "_", station_id), as.character(year))
   if (!dir.exists(station_path )) dir.create(station_path , recursive = TRUE)
 
   url <- paste0("https://climate.weather.gc.ca/climate_data/bulk_data_e.html?format=csv",
@@ -125,7 +125,7 @@ get_single_station_file <- function(station_name = NULL, station_id = NULL, year
 
   tryCatch({
     download.file(url, station_downloads, mode = "wb", quiet = TRUE)
-    return(TRUE)
+    return(invisible(TRUE))
   }, error = function(e) {
     warning("Download failed for URL: ", url);
     return(FALSE)

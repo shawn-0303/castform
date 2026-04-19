@@ -8,7 +8,7 @@
 #' @param year Numeric Integer: The year of the data pull. If left empty, will default to the first year for data collection for that particular station.
 #' @param month Numeric Integer: The month of the data pull (1 - 12). If left empty, will default to January (1).
 #' @param parallel_threshold Numeric Integer: The required number of files to trigger parallel downloads. If left unchanged, parallelization will occur for downloads of 50 files or more.
-#' @param root_folder The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
+#' @param out_dir The created download folder and file path. If left unchanged, will create a new "station_data" folder in the working directory.
 #' @param HLY_station_info Dataframe: Station metadata
 #'
 #' @importFrom future plan multisession sequential
@@ -17,12 +17,12 @@
 #' @importFrom utils download.file
 #'
 #' @export
-get_multiple_station_files <- function(station_name = NULL, station_id = NULL, number_of_files = NULL, year = NULL, month = NULL, parallel_threshold = 50, root_folder = "station_data", HLY_station_info = NULL) {
+get_multiple_station_files <- function(station_name = NULL, station_id = NULL, number_of_files = NULL, year = NULL, month = NULL, parallel_threshold = 50, out_dir = "station_data", HLY_station_info = NULL) {
   progressr::handlers(global = TRUE)
   progressr::handlers("progress")
 
-  if(!dir.exists(root_folder))
-    dir.create(root_folder, recursive = TRUE)
+  if(!dir.exists(out_dir))
+    dir.create(out_dir, recursive = TRUE)
 
   # No metadata provided
   if (is.null(HLY_station_info)) {
@@ -163,7 +163,7 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder)
+                              out_dir = out_dir)
     }, .options = furrr_options(seed = TRUE))
 
     future::plan(future::sequential)
@@ -178,7 +178,7 @@ get_multiple_station_files <- function(station_name = NULL, station_id = NULL, n
                               station_id = station_id,
                               year = yr,
                               month = mo,
-                              root_folder = root_folder)
+                              out_dir = out_dir)
     })
   }
 })
