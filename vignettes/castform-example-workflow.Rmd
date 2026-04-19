@@ -2,7 +2,7 @@
 title: "Example Workflow"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{castform-example-workflow}
+  %\VignetteIndexEntry{Example Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -104,7 +104,7 @@ station_map(db_name = "PEI",
 ```{r, echo = FALSE}
 #| out.width: "70%"
 #| fig.align: "center"
-knitr::include_graphics("castform_outputs/PEI_outputs/PEI_STATION_MAP.png")
+knitr::include_graphics("PEI_STATION_MAP.png")
 ```
 
 ### (6b) Data Missingness
@@ -123,7 +123,7 @@ data_missingness_table(db_name = "PEI",
 #| message: false
 #| out.width: "100%"
 #| fig.align: "center"
-knitr::include_graphics("castform_outputs/PEI_outputs/Example_Data_Missingness_Table.png")
+knitr::include_graphics("Example_Data_Missingness_Table.png")
 ```
 
 ### (6c) Data Ranges
@@ -142,7 +142,7 @@ data_ranges(db_name = "PEI",
 #| message: false
 #| out.width: "100%"
 #| fig.align: "center"
-knitr::include_graphics("castform_outputs/PEI_outputs/Example_Data_Ranges_Table.png")
+knitr::include_graphics("Example_Data_Ranges_Table.png")
 ```
 
 ### (6f) Visualize Yearly Means
@@ -162,7 +162,7 @@ plot_yearly_means(db_name = "PEI",
 #| message: false
 #| out.width: "100%"
 #| fig.align: "center"
-knitr::include_graphics("castform_outputs/PEI_outputs/Example_Yearly_Means_Plot.png")
+knitr::include_graphics("Example_Yearly_Means_Plot.png")
 ```
 
 ### (6e) Visualize Missing Strings
@@ -185,7 +185,7 @@ pull_missing_strings(db_name = "PEI",
 #| message: false
 #| out.width: "100%"
 #| fig.align: "center"
-knitr::include_graphics("castform_outputs/PEI_outputs/Example_Missing_Strings_Plot.png")
+knitr::include_graphics("Example_Missing_Strings_Plot.png")
 ```
 
 ### (6f) Visualize Repeated Strings
@@ -209,7 +209,7 @@ pull_repeated_strings(db_name = "PEI",
 #| message: false
 #| out.width: "100%"
 #| fig.align: "center"
-knitr::include_graphics("castform_outputs/PEI_outputs/Example_Repeated_Strings_Plot.png")
+knitr::include_graphics("Example_Repeated_Strings_Plot.png")
 ```
 
 ## (7) Detect Heat Waves 
@@ -228,7 +228,7 @@ heatwave_detector(db_name = "PEI",
 #| message: false
 #| out.width: "100%"
 #| fig.align: "center"
-knitr::include_graphics("castform_outputs/PEI_outputs/Example_HeatWave.png")
+knitr::include_graphics("Example_HeatWave.png")
 ```
 
 
