@@ -17,14 +17,20 @@ includes functions to:
 
 - Download latest station inventory list
 - Search for available stations by province and year range
-- Download a single hourly data file
-- Download multiple hourly data files
-- Download data files by province/territory
-- Download data files by year range
+- Download a station’s data files from:
+  - A single month
+  - Multiple months
+  - A single province/territory
+  - A certain year Range
 - Download all available hourly station files
 - Create a database from downloaded files
-- Create exploratory plots
-- Detect heatwaves from historical data
+- Create exploratory plots to identify:
+  - Missing data
+  - Data ranges
+  - Yearly variable means
+  - Missing data strings
+  - Repeated data strings
+- Detect extreme heat events in historical data
 
 ## Installation
 
@@ -36,16 +42,17 @@ You can install the development version of castform from
 pak::pak("shawn-0303/castform_package")
 ```
 
-## Loading Metadata
+## Usage
+
+### Loading Metadata
 
 This needs to be the FIRST STEP of your analysis.
 
 Download the latest station inventory list using
-[`get_metadata()`](https://shawn-0303.github.io/castform/reference/get_metadata.md).
-This function will download the latest station inventory list and store
-each new version as a .csv and .rda file. Whenever this function is run,
-it will also load the station list into the global environment as
-`Hourly_station_info`.
+[`get_metadata()`](reference/get_metadata.md). This function will
+download the latest station inventory list and store each new version as
+a .csv and .rda file. Whenever this function is run, it will also load
+the station list into the global environment as `Hourly_station_info`.
 
 ``` r
 library(castform)
@@ -53,7 +60,7 @@ library(castform)
 get_metadata()
 ```
 
-## Searching for Station Information
+### Searching for Station Information
 
 All the download wrappers require specific information about the
 station(s) the user wants to download. This information can be pulled
@@ -68,7 +75,7 @@ station_lookup(province = "prince edward island",
 You can search for stations by `Province` as well as the `start_year`
 and `end_year` of hourly data collection.
 
-## Downloading files
+### Downloading files
 
 The following are various download wrappers that will download historic
 weather station data as .csv files.
@@ -76,7 +83,7 @@ weather station data as .csv files.
 By default, all downloads are written to a new “station_data” folder in
 the working directory.
 
-### Download a Single Station File
+#### Download a Single Station File
 
 Download a single .csv file from a specified station that stores a month
 of hourly weather data.
@@ -92,7 +99,7 @@ get_single_station_file(station_name =  "discovery island",
                         root_folder = "station_data")
 ```
 
-### Downloading Multiple Station Files
+#### Downloading Multiple Station Files
 
 ``` r
 get_multiple_station_files(station_name = "discovery island",
@@ -104,7 +111,7 @@ get_multiple_station_files(station_name = "discovery island",
                            root_folder = "station_data")
 ```
 
-### Downloading Files by Station
+#### Downloading Files by Station
 
 Can specify by `year` and `month`, but if left empty, will download all
 data available for that station.
@@ -116,7 +123,7 @@ get_station_files(station_name = "discovery island"
                   root_folder = "station_data")
 ```
 
-### Downloading Files by Province
+#### Downloading Files by Province
 
 Can specify by `year` and `month`, but if left empty, will download all
 data available for that province.
@@ -127,7 +134,7 @@ province_station_files(province = "prince edward island",
                        root_folder = "station_data")
 ```
 
-### Downloading Files by Year Range
+#### Downloading Files by Year Range
 
 ``` r
 year_range_station_files(station_name = "discovery island",
@@ -138,7 +145,7 @@ year_range_station_files(station_name = "discovery island",
                          root_folder = "station_data")
 ```
 
-### Download All Available Hourly Station Data
+#### Download All Available Hourly Station Data
 
 This function downloads all available historical hourly weather station
 data from Canada and **will result in a very large download.**
@@ -147,12 +154,10 @@ data from Canada and **will result in a very large download.**
 get_all_files()
 ```
 
-## Making Databases
+### Making Databases
 
 Creates a searchable database with a specified folder of hourly weather
-station data. By default, data will be pulled from the package’s default
-data storage folder (“station_data”) in the user’s working directory and
-the database will be stored in the same folder.
+station data.
 
 ``` r
 build_station_database <- function(db_name = "BC_station_data", 
@@ -168,13 +173,10 @@ This builds a database with the expected scheme:
 - `Observation`: Stores information from downloaded station data (.csv)
   files
 
-### Validate the Database
+#### Validate the Database
 
 After creation, it is a good idea to validate the created database using
-[`validate_database()`](https://shawn-0303.github.io/castform/reference/validate_database.md)
-This will check for the created tables, list the number of observations
-within each table, and lists the first five observations within the
-Observation table.
+[`validate_database()`](reference/validate_database.md).
 
 ``` r
 validate_database(db_name = "BC_station_data",
@@ -187,13 +189,29 @@ From the expected schema, produced tables should have:
 - `Station` As many records as HLY_Station_Info
 - `Observation` As many records as stored in the downloaded data files
 
-## Exploratory Data Analysis
+### Exploratory Data Analysis
 
 Queries and produces .html outputs to visualize the structure and
 summary of the data. Each table provides buttons for users to copy the
 output or download a `.csv` or `.pdf`.
 
-### Data Missingness
+### Create Map of Stations
+
+Creates a map to visualize stations of metadata. If
+`metadata_stations = TRUE`, this function will map all stations with
+hourly data available.
+
+``` r
+station_map(db_name =  "BC_station_data",
+            db_dir = "castform_outputs",
+            output_dir = "castform_outputs",
+            output_name = "BC_station_map",
+            metadata_stations = FALSE)
+            
+station_map(metadata_stations = TRUE)
+```
+
+#### Data Missingness
 
 Creates a table outlining the expected and actual data counts, along
 with the percentage of missing data for each variable in each station.
@@ -201,10 +219,11 @@ with the percentage of missing data for each variable in each station.
 ``` r
 data_missingness_table(db_name =  "BC_station_data",
                        db_dir = "castform_outputs",
-                       output_dir = "castform_outputs")
+                       output_dir = "castform_outputs"
+                       output_name = "BC_data_missingness",)
 ```
 
-### Data Ranges
+#### Data Ranges
 
 Creates a table summarizing the average, minimum and maximum value of
 each variable in each station.
@@ -212,10 +231,11 @@ each variable in each station.
 ``` r
 data_ranges(db_name =  "BC_station_data",
             db_dir = "castform_outputs",
-            output_dir = "castform_outputs")
+            output_dir = "castform_outputs"
+            output_name = "BC_data_ranges,)
 ```
 
-### Yearly Means
+#### Yearly Means
 
 Create plots that summarize the means of every variable over time (where
 station data is available)
@@ -223,22 +243,24 @@ station data is available)
 ``` r
 plot_yearly_means(db_name =  "BC_station_data",
                   db_dir = "castform_outputs",
-                  output_dir = "castform_outputs")
+                  output_dir = "castform_outputs,
+                  output_name = "BC_yearly_means",")
 ```
 
-### Missing Strings
+#### Missing Strings
 
-Creates a table identifying when data is missing. Stores the length (in
-hours) and start and end date/time of the data gap. Also creates a plot
-to visualize these gaps.
+Creates a table identifying when data is missing.
+
+**NOTE:** This will take longer to run on larger datasets.
 
 ``` r
 pull_missing_strings(db_name =  "BC_station_data",
                      db_dir = "castform_outputs",
-                     output_dir = "castform_outputs")
+                     output_dir = "castform_outputs
+                     output_name = "BC_missing_strings",")
 ```
 
-### Repeated Strings
+#### Repeated Strings
 
 Creates a table identifying strings of repeated values that occur for
 three hours or more. The table stores the length (in hours) and start
@@ -252,23 +274,19 @@ plot will look empty.
 ``` r
 pull_repeated_strings(db_name =  "BC_station_data",
                      db_dir = "castform_outputs",
-                     output_dir = "castform_outputs")
+                     output_dir = "castform_outputs",
+                     output_name = "BC_repeated_strings",)
 ```
 
-## Heat Wave Detector
+### Heat Wave Detector
 
 Detects of extreme heat events using user input temperature thresholds
-(in Celcius).
+(in Celcius) and creates a table and plot summarizing daily temperature
+averages.
 
 Uses ECCC’s definition of extreme heat events, which defines them as
 “events during which daily temperatures have reached heat warning
 thresholds on 2 or more consecutive days with no relief overnight”.
-
-Creates a table and plot summarizing daily temperature averages. The
-table stores logical information on whether that day crosses the
-temperature thresholds and whether it is considered a heatwave. The plot
-visualizes this information by plotting daily temperatures and
-highlighting when heatwave events occur.
 
 ``` r
 heatwave_detector(db_name =  "BC_STATION_DATA",

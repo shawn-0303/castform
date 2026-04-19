@@ -12,7 +12,7 @@ get_multiple_station_files(
   year = NULL,
   month = NULL,
   parallel_threshold = 50,
-  root_folder = "station_data",
+  out_dir = "station_data",
   HLY_station_info = NULL
 )
 ```
@@ -49,7 +49,7 @@ get_multiple_station_files(
   downloads. If left unchanged, parallelization will occur for downloads
   of 50 files or more.
 
-- root_folder:
+- out_dir:
 
   The created download folder and file path. If left unchanged, will
   create a new "station_data" folder in the working directory.

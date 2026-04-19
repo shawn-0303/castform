@@ -1,8 +1,6 @@
 # Pull Strings of Missing Data
 
-Creates a \`.html\` output table and plot to identify when data is
-missing from the database. Stores the length of the data gap (in hours)
-as well as the start and end date/time.
+Identifies when data is missing from the database.
 
 ## Usage
 
@@ -10,7 +8,9 @@ as well as the start and end date/time.
 pull_missing_strings(
   db_name = NULL,
   db_dir = "station_data",
-  output_dir = "station_data"
+  output_dir = "station_data",
+  output_name = NULL,
+  write_csv = FALSE
 )
 ```
 
@@ -22,10 +22,21 @@ pull_missing_strings(
 
 - db_dir:
 
-  The directory of the database, If left unchanged, will default to
-  package's default created directory "station_data".
+  Character: The directory of the database, If left unchanged, will
+  default to package's default created directory "station_data".
 
 - output_dir:
 
-  The created download folder and file path. If left unchanged, will
-  create a new "station_data" folder in the working directory.
+  Character: The created download folder and file path. If left
+  unchanged, will create a new "station_data" folder in the working
+  directory.
+
+- output_name:
+
+  Character: The name of the output file. If left unfilled, the function
+  will name the file "db_name_missingness_table.html"
+
+## Value
+
+A \`.html\` output table and plot that displays the length of the data
+gap (in hours) as well as the start and end date/time.

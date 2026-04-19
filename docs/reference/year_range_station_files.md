@@ -12,7 +12,7 @@ year_range_station_files(
   start_year = NULL,
   end_year = NULL,
   parallel_threshold = 50,
-  root_folder = "station_data",
+  out_dir = "station_data",
   HLY_station_info = NULL
 )
 ```
@@ -45,11 +45,11 @@ year_range_station_files(
   downloads. If left unchanged, parallelization will occur for downloads
   of 50 files or more.
 
+- HLY_station_info:
+
+  Dataframe: Station metadata
+
 - root_folder:
 
   The created download folder and file path. If left unchanged, will
   create a new "station_data" folder in the working directory.
-
-- HLY_station_info:
-
-  Dataframe: Station metadata

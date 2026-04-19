@@ -12,7 +12,7 @@ downloaded station data (.csv) files.
 build_station_database(
   db_name = NULL,
   HLY_station_info = NULL,
-  output_dir = "station_data",
+  out_dir = "station_data",
   root_folder = "station_data"
 )
 ```
@@ -27,7 +27,7 @@ build_station_database(
 
   Station metadata
 
-- output_dir:
+- out_dir:
 
   The created output directory of the database. If left unchanged, will
   store the database within the default root_folder

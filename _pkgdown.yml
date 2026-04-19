@@ -1,6 +1,4 @@
-url: https://shawn-0303.github.io/castform/
+url: ~
 template:
   bootstrap: 5
-logo:
-  src: man/figures/logo.png
 
