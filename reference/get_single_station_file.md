@@ -10,7 +10,7 @@ get_single_station_file(
   station_id = NULL,
   year = NULL,
   month = NULL,
-  root_folder = "station_data",
+  out_dir = "station_data",
   HLY_station_info = NULL
 )
 ```
@@ -37,7 +37,7 @@ get_single_station_file(
   Numeric Integer: The month of the data pull (1 - 12). If left empty,
   will default to January (1).
 
-- root_folder:
+- out_dir:
 
   The created download folder and file path. If left unchanged, will
   create a new "station_data" folder in the working directory.

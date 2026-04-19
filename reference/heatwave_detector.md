@@ -13,7 +13,8 @@ heatwave_detector(
   max_threshold = NULL,
   min_threshold = NULL,
   db_dir = "station_data",
-  output_dir = "station_data"
+  output_dir = "station_data",
+  write_csv = FALSE
 )
 ```
 
@@ -41,6 +42,10 @@ heatwave_detector(
   Character: The created download folder and file path. If left
   unchanged, will create a new "station_data" folder in the working
   directory.
+
+- write_csv:
+
+  Logical: If TRUE prints a csv copy of the results
 
 ## Value
 

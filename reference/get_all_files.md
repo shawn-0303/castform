@@ -6,12 +6,12 @@ available.
 ## Usage
 
 ``` r
-get_all_files(root_folder = "station_data", HLY_station_info = NULL)
+get_all_files(out_dir = "station_data", HLY_station_info = NULL)
 ```
 
 ## Arguments
 
-- root_folder:
+- out_dir:
 
   The created download folder and file path. If left unchanged, will
   create a new "station_data" folder in the working directory.

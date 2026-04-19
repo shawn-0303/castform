@@ -49,11 +49,10 @@ pak::pak("shawn-0303/castform_package")
 This needs to be the FIRST STEP of your analysis.
 
 Download the latest station inventory list using
-[`get_metadata()`](https://shawn-0303.github.io/castform/reference/get_metadata.md).
-This function will download the latest station inventory list and store
-each new version as a .csv and .rda file. Whenever this function is run,
-it will also load the station list into the global environment as
-`Hourly_station_info`.
+[`get_metadata()`](reference/get_metadata.md). This function will
+download the latest station inventory list and store each new version as
+a .csv and .rda file. Whenever this function is run, it will also load
+the station list into the global environment as `Hourly_station_info`.
 
 ``` r
 library(castform)
@@ -177,7 +176,7 @@ This builds a database with the expected scheme:
 #### Validate the Database
 
 After creation, it is a good idea to validate the created database using
-[`validate_database()`](https://shawn-0303.github.io/castform/reference/validate_database.md).
+[`validate_database()`](reference/validate_database.md).
 
 ``` r
 validate_database(db_name = "BC_station_data",
@@ -251,6 +250,8 @@ plot_yearly_means(db_name =  "BC_station_data",
 #### Missing Strings
 
 Creates a table identifying when data is missing.
+
+**NOTE:** This will take longer to run on larger datasets.
 
 ``` r
 pull_missing_strings(db_name =  "BC_station_data",

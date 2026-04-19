@@ -9,7 +9,8 @@ pull_repeated_strings(
   db_name = NULL,
   db_dir = "station_data",
   output_dir = "station_data",
-  output_name = NULL
+  output_name = NULL,
+  write_csv = FALSE
 )
 ```
 
@@ -33,6 +34,10 @@ pull_repeated_strings(
 
   Character: The name of the output file. If left unfilled, the function
   will name the file "db_name_missingness_table.html"
+
+- write_csv:
+
+  Logical: If TRUE prints a csv copy of the results
 
 ## Value
 

@@ -35,6 +35,12 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/castform.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/castform-example-workflow.html">Example Workflow</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -81,7 +87,7 @@ the Department of Environment and Climate Change Canada (ECCC).</p>
 analysis.</p>
 <p><br clear="right"></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shawn-0303.github.io/castform/">castform</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shawn-0303.github.io/castform/" class="external-link">castform</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="loading-metadata">Loading Metadata<a class="anchor" aria-label="anchor" href="#loading-metadata"></a>
@@ -418,6 +424,8 @@ strings of data. It creates a table to identify when data is missing and
 stores the length (in hours), as well as the start and end date/time for
 each gap. It will also create an interactive plot to visualize these
 gaps</p>
+<p><strong>NOTE:</strong> This will take longer to run on larger
+datasets.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pull_missing_strings.html">pull_missing_strings</a></span><span class="op">(</span>db_name <span class="op">=</span>  <span class="st">"BC_STATION_DATA"</span><span class="op">)</span></span></code></pre></div>
 </div>

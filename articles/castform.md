@@ -32,19 +32,17 @@ library(castform)
 get_metadata()
 ```
 
-The function
-[`get_metadata()`](https://shawn-0303.github.io/castform/reference/get_metadata.md)
-downloads the latest station inventory list from ECCC. No input
-parameters are required to run this function. When run, this function
-will download the station inventory list as a `.csv` file and save it as
-a backup `.rda` file.
+The function [`get_metadata()`](../reference/get_metadata.md) downloads
+the latest station inventory list from ECCC. No input parameters are
+required to run this function. When run, this function will download the
+station inventory list as a `.csv` file and save it as a backup `.rda`
+file.
 
-[`get_metadata()`](https://shawn-0303.github.io/castform/reference/get_metadata.md)
-will automatically update `HLY_station_info` to store the latest
-download after filtering for stations that contain hourly data (stations
-where `HLY.First.Year` and `HLY.First.Year` are not NA values).
-`HLY_station_info` is automatically loaded into the user’s global
-environment.
+[`get_metadata()`](../reference/get_metadata.md) will automatically
+update `HLY_station_info` to store the latest download after filtering
+for stations that contain hourly data (stations where `HLY.First.Year`
+and `HLY.First.Year` are not NA values). `HLY_station_info` is
+automatically loaded into the user’s global environment.
 
 `HLY_station_info` is expected to include these key columns:
 
@@ -63,7 +61,7 @@ must be the first thing that is run before any analysis.
 All the download wrappers require specific information about the
 station(s) the user wants to download. This information can be pulled
 from the metadata using
-[`station_lookup()`](https://shawn-0303.github.io/castform/reference/station_lookup.md).
+[`station_lookup()`](../reference/station_lookup.md).
 
 ``` r
 station_lookup(province = "prince edward island",
@@ -80,7 +78,7 @@ The following are walk-throughs of the different download wrappers.
 
 ### Download a Single Station File
 
-[`get_single_station_file()`](https://shawn-0303.github.io/castform/reference/get_single_station_file.md)
+[`get_single_station_file()`](../reference/get_single_station_file.md)
 will download a single `.csv` file from a specified station that stores
 a month of hourly weather data.
 
@@ -117,7 +115,7 @@ IDs. Then, re-run the function and input both `station_name` and
 
 ### Downloading Multiple Station Files
 
-[`get_multiple_station_files()`](https://shawn-0303.github.io/castform/reference/get_multiple_station_files.md)
+[`get_multiple_station_files()`](../reference/get_multiple_station_files.md)
 will download multiple `.csv` files from a specified station. The number
 of files to download is specified using `number_of_files` and the
 download starting point is specified using `year` and `month`.
@@ -226,8 +224,7 @@ get_all_files(root_folder = "station_data")
 
 ### Additional Download Information
 
-If the user has run
-[`get_metadata()`](https://shawn-0303.github.io/castform/reference/get_metadata.md),
+If the user has run [`get_metadata()`](../reference/get_metadata.md),
 download wrapper functions will default to using the resulting
 `Hourly_Station_Info`. If a past version of the station list needs to be
 used, the user can edit the `Hourly_Station_Info` parameter within each
@@ -242,8 +239,8 @@ province_station_files(province = "prince edward island",
 
 ## Making Databases
 
-[`build_station_database()`](https://shawn-0303.github.io/castform/reference/build_station_database.md)
-can be used to create a searchable database with a specified folder of
+[`build_station_database()`](../reference/build_station_database.md) can
+be used to create a searchable database with a specified folder of
 hourly weather station data.
 
 Input database names will automatically have spaces replaced with
@@ -277,9 +274,9 @@ This function builds an database with three tables:
 ### Validating Database Creation
 
 After the database is created, users can use
-[`validate_database()`](https://shawn-0303.github.io/castform/reference/validate_database.md).
-This will check for the created tables, list the number of observations
-within each table, and lists the first five observations within the
+[`validate_database()`](../reference/validate_database.md). This will
+check for the created tables, list the number of observations within
+each table, and lists the first five observations within the
 `Observation` table.
 
 ``` r
@@ -318,8 +315,8 @@ Every EDA function has the same three parameters:
 
 ### Station Map
 
-[`station_map()`](https://shawn-0303.github.io/castform/reference/station_map.md)
-creates a `.png` that plots the stations of interest on a map of Canada.
+[`station_map()`](../reference/station_map.md) creates a `.png` that
+plots the stations of interest on a map of Canada.
 
 ``` r
 station_map(db_name =  "BC_STATION_DATA",
@@ -337,7 +334,7 @@ station_map(metadata_stations = TRUE,
 
 ### Data Missingness Table
 
-[`data_missingness_table()`](https://shawn-0303.github.io/castform/reference/data_missingness_table.md)
+[`data_missingness_table()`](../reference/data_missingness_table.md)
 creates a table outlining the expected and actual data counts, along
 with the percentage of missing data for each variable in each station.
 
@@ -347,9 +344,9 @@ data_missingness_table(db_name =  "BC_STATION_DATA")
 
 ### Data Range Table
 
-[`data_ranges()`](https://shawn-0303.github.io/castform/reference/data_ranges.md)
-creates a table outlining the average, minimum, and maximum values for
-each variable in each station.
+[`data_ranges()`](../reference/data_ranges.md) creates a table outlining
+the average, minimum, and maximum values for each variable in each
+station.
 
 ``` r
 data_ranges(db_name =  "BC_STATION_DATA")
@@ -357,9 +354,9 @@ data_ranges(db_name =  "BC_STATION_DATA")
 
 ### Yearly Means Plots
 
-[`plot_yearly_means()`](https://shawn-0303.github.io/castform/reference/plot_yearly_means.md)
-creates plots outlining the values for each variable over time for every
-year the station is active.
+[`plot_yearly_means()`](../reference/plot_yearly_means.md) creates plots
+outlining the values for each variable over time for every year the
+station is active.
 
 ``` r
 plot_yearly_means(db_name =  "BC_STATION_DATA")
@@ -367,11 +364,13 @@ plot_yearly_means(db_name =  "BC_STATION_DATA")
 
 ### Identify Data Gaps
 
-[`pull_missing_strings()`](https://shawn-0303.github.io/castform/reference/pull_missing_strings.md)
+[`pull_missing_strings()`](../reference/pull_missing_strings.md)
 identifies gaps or missing strings of data. It creates a table to
 identify when data is missing and stores the length (in hours), as well
 as the start and end date/time for each gap. It will also create an
 interactive plot to visualize these gaps
+
+**NOTE:** This will take longer to run on larger datasets.
 
 ``` r
 pull_missing_strings(db_name =  "BC_STATION_DATA")
@@ -381,7 +380,7 @@ pull_missing_strings(db_name =  "BC_STATION_DATA")
 
 Hours of repeated data values can indicate faulty machinery during data
 collection.
-[`pull_repeated_strings()`](https://shawn-0303.github.io/castform/reference/pull_repeated_strings.md)
+[`pull_repeated_strings()`](../reference/pull_repeated_strings.md)
 identifies strings of repeated values that occur for three hours or
 more. This can indicate faulty machinery in data collection. The table
 stores the length (in hours) and start and end date/time of the repeated
@@ -400,9 +399,9 @@ plot will look empty.
 
 After verifying the data, you can now perform an analysis to detect
 extreme weather events.
-[`heatwave_detector()`](https://shawn-0303.github.io/castform/reference/heatwave_detector.md)
-allows for the detection of extreme heat events using user input
-temperature thresholds (in Celcius).
+[`heatwave_detector()`](../reference/heatwave_detector.md) allows for
+the detection of extreme heat events using user input temperature
+thresholds (in Celcius).
 
 This function uses ECCC’s definition of extreme heat events, which
 defines them as “events during which daily temperatures have reached
